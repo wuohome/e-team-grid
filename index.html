@@ -541,6 +541,140 @@
     font-weight:300;
   }
 
+  /* ================= v4：服務／TA 兩行結構（中央 8 服務格＋外圈 8 子宮格中心格） ================= */
+
+  .micro-cell.two-line{
+    flex-direction:column;
+    align-items:stretch;
+    justify-content:center;
+    text-align:left;
+    gap:0;
+    position:relative;
+  }
+
+  .two-line .cell-rank{
+    position:absolute;
+    top:3px;
+    right:5px;
+    font-size:9.5px;
+    font-weight:700;
+    color:var(--white);
+    background:var(--red);
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    line-height:1;
+  }
+
+  .macro-theme .micro-cell.theme-center.two-line .cell-rank{
+    background:rgba(255,255,255,0.28);
+  }
+
+  .two-line .cell-service{
+    font-size:11px;
+    font-weight:700;
+    line-height:1.28;
+  }
+
+  .two-line .cell-divider{
+    height:1px;
+    background:currentColor;
+    opacity:0.18;
+    margin:3px 0;
+  }
+
+  .two-line .cell-ta{
+    font-size:10px;
+    font-weight:600;
+    line-height:1.22;
+    color:var(--gold);
+  }
+
+  .macro-center .micro-cell.theme-preview.two-line .cell-ta{
+    color:var(--gold-deep);
+  }
+
+  .two-line .cell-ta.empty{
+    color:#b8985a;
+    border:1px dashed var(--gold);
+    border-radius:5px;
+    padding:1px 5px;
+    display:inline-block;
+    font-size:9.5px;
+    font-weight:600;
+    font-style:normal;
+  }
+
+  /* 中央服務格存檔後自動複寫到外圈中心格：金色 pulse 提示 */
+  .micro-cell.gold-pulse,
+  .mobile-cell.gold-pulse{
+    animation: goldPulse 900ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  @keyframes goldPulse{
+    0%{ box-shadow:0 0 0 0 rgba(200,160,79,0.65); }
+    60%{ box-shadow:0 0 0 8px rgba(200,160,79,0); }
+    100%{ box-shadow:0 0 0 0 rgba(200,160,79,0); }
+  }
+
+  /* 軟提醒：核心服務／專業別未滿 6 個 */
+  .soft-hint-count{
+    margin-top:10px;
+    font-size:12px;
+    color:#9a9a9a;
+    text-align:center;
+  }
+
+  /* 81 格全展開：精簡／完整切換 */
+  .mode-toggle-row{
+    display:flex;
+    justify-content:flex-end;
+    margin-bottom:10px;
+  }
+
+  .mode-toggle{
+    display:inline-flex;
+    background:var(--gray-bg);
+    border-radius:999px;
+    padding:3px;
+    gap:2px;
+  }
+
+  .mode-toggle button{
+    border:none;
+    background:transparent;
+    font-family:inherit;
+    font-size:12px;
+    font-weight:700;
+    color:var(--ink-soft);
+    padding:6px 14px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:background 160ms var(--ease-out), color 160ms var(--ease-out);
+  }
+
+  .mode-toggle button.active{
+    background:var(--red);
+    color:var(--white);
+  }
+
+  .mode-toggle button:not(.active):hover{
+    background:rgba(0,0,0,0.06);
+  }
+
+  /* 精簡模式：兩行格只顯示服務行 */
+  .mandala-desktop.compact-mode .two-line .cell-divider,
+  .mandala-desktop.compact-mode .two-line .cell-ta{
+    display:none;
+  }
+  .mandala-desktop.compact-mode .two-line{
+    align-items:center;
+    text-align:center;
+    justify-content:center;
+  }
+
   /* ---- mobile 3x3 + 子宮格 drill-down ---- */
 
   .mandala-mobile{
@@ -653,6 +787,72 @@
     background:var(--white);
     border:1px solid var(--border-hair);
     font-size:11.5px;
+  }
+
+  /* v4：手機版兩行格（本人 3x3 主題總覽格＋子宮格中心格） */
+  .mobile-cell.two-line{
+    flex-direction:column;
+    align-items:stretch;
+    justify-content:center;
+    text-align:left;
+    gap:0;
+    position:relative;
+  }
+
+  .mobile-cell.two-line .cell-rank{
+    position:absolute;
+    top:3px;
+    right:5px;
+    font-size:9.5px;
+    font-weight:700;
+    color:var(--white);
+    background:var(--red);
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    line-height:1;
+  }
+
+  .mobile-cell.theme-center.two-line .cell-rank{
+    background:rgba(255,255,255,0.28);
+  }
+
+  .mobile-cell.two-line .cell-service{
+    font-size:12px;
+    font-weight:700;
+    line-height:1.28;
+  }
+
+  .mobile-cell.two-line .cell-divider{
+    height:1px;
+    background:currentColor;
+    opacity:0.18;
+    margin:3px 0;
+  }
+
+  .mobile-cell.two-line .cell-ta{
+    font-size:10.5px;
+    font-weight:600;
+    line-height:1.22;
+    color:var(--gold);
+  }
+
+  .mobile-cell.theme-preview.two-line .cell-ta{
+    color:var(--gold-deep);
+  }
+
+  .mobile-cell.two-line .cell-ta.empty{
+    color:#b8985a;
+    border:1px dashed var(--gold);
+    border-radius:5px;
+    padding:1px 5px;
+    display:inline-block;
+    font-size:9.5px;
+    font-weight:600;
+    font-style:normal;
   }
 
   .mobile-detail-grid .mobile-cell.role-empty{
@@ -893,6 +1093,86 @@
 
   .edit-modal-btn.clear{
     color:#A05050;
+  }
+
+  /* ================= v4：wizard／5 問引導 modal ================= */
+
+  .wizard-step{
+    font-size:11.5px;
+    font-weight:700;
+    color:var(--red);
+    letter-spacing:0.03em;
+    margin:0 0 4px;
+  }
+
+  .wizard-desc{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin:0 0 14px;
+    line-height:1.5;
+  }
+
+  .wizard-field-label{
+    display:block;
+    font-size:12px;
+    font-weight:700;
+    color:var(--ink);
+    margin:0 0 6px;
+  }
+
+  .wizard-input{
+    width:100%;
+    padding:10px 12px;
+    border-radius:8px;
+    border:1.5px solid var(--border-hair);
+    font-family:inherit;
+    font-size:14px;
+    color:var(--ink);
+    transition:border-color 150ms var(--ease-out), box-shadow 150ms var(--ease-out);
+  }
+
+  .wizard-input:focus{
+    outline:none;
+    border-color:var(--red);
+    box-shadow:0 0 0 3px rgba(200,16,46,0.12);
+  }
+
+  .guide-context{
+    display:inline-block;
+    background:var(--ink);
+    color:var(--white);
+    font-size:12px;
+    font-weight:700;
+    padding:5px 12px;
+    border-radius:999px;
+    margin:0 0 10px;
+  }
+
+  .guide-card{
+    background:var(--gray-bg);
+    border-radius:10px;
+    padding:14px 16px;
+    margin-bottom:14px;
+  }
+
+  .guide-card-title{
+    font-size:12.5px;
+    font-weight:700;
+    color:var(--ink);
+    margin:0 0 8px;
+  }
+
+  .guide-list{
+    margin:0;
+    padding-left:18px;
+    font-size:12px;
+    color:var(--ink-soft);
+    line-height:1.75;
+  }
+
+  .guide-list li::marker{
+    color:var(--gold);
+    font-weight:700;
   }
 
   /* ================= 側邊欄（夥伴名單） ================= */
@@ -1247,8 +1527,19 @@
     <span><i class="legend-dot empty"></i>待補</span>
   </div>
 
+  <!-- 桌機版：精簡／完整切換（v4 § 11.3，只影響兩行格的 TA 行顯示） -->
+  <div class="mode-toggle-row">
+    <div class="mode-toggle" role="group" aria-label="服務／TA 顯示模式">
+      <button type="button" id="mode-full-btn" class="active" aria-pressed="true" onclick="setGridMode(false)">完整</button>
+      <button type="button" id="mode-compact-btn" aria-pressed="false" onclick="setGridMode(true)">精簡</button>
+    </div>
+  </div>
+
   <!-- 桌機版 9x9 -->
   <div class="mandala-desktop" id="mandala-desktop"></div>
+
+  <!-- v4 § 11.3 軟提醒：核心服務未滿 6 個時顯示，不強制 -->
+  <p class="soft-hint-count" id="core-service-hint" style="display:none;"></p>
 
   <!-- 手機版 3x3 + drill-down -->
   <div class="mandala-mobile">
@@ -1292,7 +1583,7 @@
   <img id="lightbox-img" src="" alt="放大檢視">
 </div>
 
-<!-- 編輯輸入彈窗 -->
+<!-- 編輯輸入彈窗（本人資料／引薦角色沿用單欄 textarea） -->
 <div class="edit-modal-backdrop" id="edit-modal-backdrop" onclick="closeEditModal()">
   <div class="edit-modal" onclick="event.stopPropagation()">
     <p class="edit-modal-label" id="edit-modal-label">修改內容</p>
@@ -1305,12 +1596,63 @@
   </div>
 </div>
 
+<!-- v4：中央服務格兩步 wizard（依重要性填核心服務 → 填 TA） -->
+<div class="edit-modal-backdrop" id="wizard-backdrop" onclick="closeWizardModal()">
+  <div class="edit-modal wizard-modal" onclick="event.stopPropagation()">
+    <p class="wizard-step" id="wizard-step-label">步驟 1／2</p>
+    <p class="edit-modal-label" id="wizard-title">依重要性填入「核心服務」</p>
+    <p class="wizard-desc" id="wizard-desc"></p>
+    <label class="wizard-field-label" id="wizard-field-label" for="wizard-input">核心服務</label>
+    <input type="text" id="wizard-input" class="wizard-input" placeholder="">
+    <div class="edit-modal-actions">
+      <button class="edit-modal-btn" onclick="closeWizardModal()">取消</button>
+      <button class="edit-modal-btn primary" id="wizard-next-btn" onclick="wizardNext()">下一步</button>
+    </div>
+  </div>
+</div>
+
+<!-- v4：外圈周邊格 5 問引導 modal -->
+<div class="edit-modal-backdrop" id="guide-backdrop" onclick="closeGuideModal()">
+  <div class="edit-modal guide-modal" onclick="event.stopPropagation()">
+    <p class="guide-context" id="guide-context"></p>
+    <p class="edit-modal-label">補足引薦網絡</p>
+    <div class="guide-card">
+      <p class="guide-card-title">想一想，哪些專業別──</p>
+      <ol class="guide-list">
+        <li>可以一起服務這個客戶？</li>
+        <li>可以一起提案？</li>
+        <li>能補足客戶其他需求？</li>
+        <li>能幫你建立信任？</li>
+        <li>能幫你美言幾句、帶來引薦？</li>
+      </ol>
+    </div>
+    <label class="wizard-field-label" for="guide-input">專業別</label>
+    <input type="text" id="guide-input" class="wizard-input" placeholder="">
+    <div class="edit-modal-actions">
+      <button class="edit-modal-btn clear" onclick="clearGuideField()">清空</button>
+      <button class="edit-modal-btn" onclick="closeGuideModal()">取消</button>
+      <button class="edit-modal-btn primary" onclick="saveGuideField()">存檔</button>
+    </div>
+  </div>
+</div>
+
 <script>
   // ===== 資料源：data.js 的 PEOPLE_DATA（13 人，逐字取自各自 vault md，不改寫不腦補） =====
   // PEOPLE_DATA 由 <script src="data.js"> 提供，此檔不再寫死任何一人的資料
 
   // 九宮格周圍位置順序（略過中心）：0..7 對應 grid 8 格（跳過正中央）
   const RING_ORDER = [0,1,2,3,5,6,7,8]; // grid-area index 1~9，跳過第5格(中心)
+
+  // v4 § 11.3：81 格全展開「精簡／完整」切換，只影響兩行格的 TA 行顯示（桌機投影用）
+  let isCompactMode = false;
+  function setGridMode(compact){
+    isCompactMode = compact;
+    document.getElementById("mode-full-btn").classList.toggle("active", !compact);
+    document.getElementById("mode-full-btn").setAttribute("aria-pressed", String(!compact));
+    document.getElementById("mode-compact-btn").classList.toggle("active", compact);
+    document.getElementById("mode-compact-btn").setAttribute("aria-pressed", String(compact));
+    renderDesktop();
+  }
 
   // ===== 目前顯示中的人 =====
   let currentId = null; // 由 initApp() 依 URL ?id= 或側邊欄選擇決定
@@ -1340,8 +1682,8 @@
       if(Array.isArray(saved.themes)){
         saved.themes.forEach((themeOverride, idx) => {
           if(!themeOverride || !themes[idx]) return;
-          if(typeof themeOverride.title === "string") themes[idx].title = themeOverride.title;
-          if(typeof themeOverride.sub === "string") themes[idx].sub = themeOverride.sub;
+          if(typeof themeOverride.service === "string") themes[idx].service = themeOverride.service;
+          if(typeof themeOverride.ta === "string") themes[idx].ta = themeOverride.ta;
           if(Array.isArray(themeOverride.roles)){
             // 整份取代（非逐格覆蓋），才能正確持久化「清空格子」造成的陣列縮短
             themes[idx].roles = themeOverride.roles.filter(r => typeof r === "string");
@@ -1388,10 +1730,37 @@
     return cells;
   }
 
+  // ================= v4：服務／TA 兩行格 render helper =================
+  function escapeHtml(str){
+    return String(str == null ? "" : str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  // rank: 1~8 順時鐘角標（右上圓角標）；titleAttr: hover 全文
+  function twoLineCellHtml(service, ta, rank, titleAttr){
+    const serviceText = service && service.trim() ? service : "（本人未填）";
+    const taHtml = ta && ta.trim()
+      ? `<span class="cell-ta">${escapeHtml(ta)}</span>`
+      : `<span class="cell-ta empty">＋補 TA</span>`;
+    const rankHtml = rank ? `<span class="cell-rank">${rank}</span>` : "";
+    return `${rankHtml}<span class="cell-service">${escapeHtml(serviceText)}</span><span class="cell-divider"></span>${taHtml}`;
+  }
+
+  // 依 § 11.3 軟提醒：核心服務／子宮格專業別數量未滿 6 顯示淡灰提醒（不強制）
+  function softHintText(filledCount, total){
+    if(filledCount >= 6) return "";
+    const remain = 6 - filledCount;
+    return `還可以再想 ${remain} 個`;
+  }
+
   // ================= 桌機 9x9 =================
   function renderDesktop(){
     const root = document.getElementById("mandala-desktop");
     root.innerHTML = "";
+    root.classList.toggle("compact-mode", isCompactMode);
 
     // 9 個 macro block 的資料規劃：
     // 位置對照曼陀羅慣例 → 中心(4) = 本人總覽；其餘 8 個 macro block = 8 主題（依序落位，含中心跳過）
@@ -1400,7 +1769,7 @@
       macro.className = "macro-cell " + (macroIdx===4 ? "macro-center" : "macro-theme");
 
       if(macroIdx===4){
-        // 中心大格：本人 + 8 主題縮寫總覽
+        // 中心大格：本人 + 8 服務格總覽（v4：兩行「服務／TA」＋ 1-8 順時鐘角標）
         let themeSlot = 0;
         for(let i=0;i<9;i++){
           const cell = document.createElement("div");
@@ -1411,26 +1780,33 @@
           } else {
             const theme = state.themes[themeSlot];
             const capturedIdx = themeSlot;
-            cell.className = "micro-cell theme-preview";
-            cell.textContent = theme.title;
-            cell.title = theme.title + "　" + theme.sub;
+            const rank = themeSlot + 1;
+            cell.className = "micro-cell theme-preview two-line";
+            cell.innerHTML = twoLineCellHtml(theme.service, theme.ta, rank);
+            cell.title = (theme.service || "（本人未填）") + "　" + (theme.ta || "尚未填寫 TA");
             cell.addEventListener("click", () => onThemeTitleClick(capturedIdx, "desktop-preview"));
             themeSlot++;
           }
           macro.appendChild(cell);
         }
       } else {
-        // 主題子宮格：主題居中 + 周圍 8 角色
+        // 主題子宮格：中心＝服務兩行格（v4）＋ 周圍 8 角色（單行不變）
         const themeOrderIdx = macroIdx < 4 ? macroIdx : macroIdx - 1; // 對應 THEMES[0..7]
         const theme = state.themes[themeOrderIdx];
-        const grid = buildMicroGrid(theme.roles, theme.title, "theme-center");
+        const grid = buildMicroGrid(theme.roles, "", "theme-center");
         grid.forEach((cellData, gridIdx) => {
           const cell = document.createElement("div");
           if(cellData.type === "center"){
-            cell.className = "micro-cell theme-center";
-            cell.textContent = cellData.html;
-            cell.title = theme.sub;
-            cell.addEventListener("click", () => onThemeTitleClick(themeOrderIdx, "desktop"));
+            // v4：外圈子宮格中心格改為唯讀——內容由中央服務格 wizard 存檔後自動複寫，
+            // 不開放此格直接編輯（避免兩個入口寫同一份資料互相蓋掉）
+            cell.className = "micro-cell theme-center two-line";
+            cell.innerHTML = twoLineCellHtml(theme.service, theme.ta, themeOrderIdx + 1);
+            const filledRoleCount = theme.roles.filter(r => r && r.trim()).length;
+            const roleHint = softHintText(filledRoleCount);
+            cell.title = (theme.service || "（本人未填）") + "　" + (theme.ta || "尚未填寫 TA")
+              + "　（請至中央服務格編輯，此處自動同步）"
+              + (roleHint ? "　專業別" + roleHint : "");
+            cell.id = "desktop-sub-center-" + themeOrderIdx;
           } else {
             cell.className = "micro-cell " + cellData.cls;
             cell.textContent = cellData.html;
@@ -1440,6 +1816,22 @@
         });
       }
       root.appendChild(macro);
+    }
+
+    updateCoreServiceHint();
+  }
+
+  // v4 § 11.3：中央 8 核心服務未滿 6 個時顯示淡灰提醒（不強制）
+  function updateCoreServiceHint(){
+    const hintEl = document.getElementById("core-service-hint");
+    if(!hintEl) return;
+    const filledCount = state.themes.filter(t => t.service && t.service.trim()).length;
+    const hint = softHintText(filledCount);
+    if(hint){
+      hintEl.textContent = "核心服務 " + hint;
+      hintEl.style.display = "";
+    } else {
+      hintEl.style.display = "none";
     }
   }
 
@@ -1459,8 +1851,9 @@
       } else {
         const theme = state.themes[themeSlot];
         const capturedIdx = themeSlot;
-        cell.className = "mobile-cell theme-preview";
-        cell.textContent = theme.title;
+        const rank = themeSlot + 1;
+        cell.className = "mobile-cell theme-preview two-line";
+        cell.innerHTML = twoLineCellHtml(theme.service, theme.ta, rank);
         cell.addEventListener("click", () => {
           if(isEditMode){
             onThemeTitleClick(capturedIdx, "mobile-preview");
@@ -1480,13 +1873,14 @@
     const detailGrid = document.getElementById("mobile-detail-grid");
     detailGrid.innerHTML = "";
 
-    const grid = buildMicroGrid(theme.roles, theme.title, "theme-center");
+    const grid = buildMicroGrid(theme.roles, "", "theme-center");
     grid.forEach((cellData, gridIdx) => {
       const cell = document.createElement("div");
       if(cellData.type === "center"){
-        cell.className = "mobile-cell theme-center";
-        cell.textContent = cellData.html;
-        cell.addEventListener("click", () => onThemeTitleClick(themeIdx, "mobile"));
+        // v4：唯讀（同 desktop 版，編輯入口在中央服務格 wizard）
+        cell.className = "mobile-cell theme-center two-line";
+        cell.innerHTML = twoLineCellHtml(theme.service, theme.ta, themeIdx + 1);
+        cell.id = "mobile-sub-center-" + themeIdx;
       } else {
         cell.className = "mobile-cell " + cellData.cls;
         cell.textContent = cellData.html;
@@ -1543,21 +1937,18 @@
     openEditModal("本人資料（姓名 / 專業別 / 區域，一行一項）", current);
   }
 
+  // v4：中央服務格 → 兩步 wizard（依重要性填核心服務 → 填 TA），origin 含 "preview" 才是中央總覽格觸發點
   function onThemeTitleClick(themeIdx, origin){
     if(!isEditMode){
       return; // 桌機主題總覽格非編輯模式點擊不做事，攤開版已可直接看全部
     }
-    editTarget = { kind:"theme-title", themeIdx };
-    const theme = state.themes[themeIdx];
-    openEditModal(`主題 ${themeIdx + 1} 標題與副標（兩行：標題／副標）`, `${theme.title}\n${theme.sub}`);
+    openWizardModal(themeIdx);
   }
 
+  // v4：外圈周邊格（引薦角色）→ 5 問引導 modal
   function onRoleCellClick(themeIdx, gridIdx, cellData){
     if(!isEditMode) return;
-    editTarget = { kind:"role", themeIdx, gridIdx, cellData };
-    const label = cellData.type === "empty" ? "新增引薦角色" : "修改引薦角色";
-    const current = cellData.type === "empty" ? "" : cellData.html;
-    openEditModal(label, current);
+    openGuideModal(themeIdx, gridIdx, cellData);
   }
 
   function openEditModal(labelText, currentValue){
@@ -1586,24 +1977,6 @@
       state.self.name = lines[0] || state.self.name;
       state.self.role = lines[1] || "";
       state.self.area = lines[2] || "";
-    } else if(editTarget.kind === "theme-title"){
-      const lines = value.split("\n").map(s => s.trim());
-      const theme = state.themes[editTarget.themeIdx];
-      theme.title = lines[0] || theme.title;
-      theme.sub = lines[1] || "";
-    } else if(editTarget.kind === "role"){
-      // v2 資料每主題恰 8 格，不再有合併格特例：依 ring 位置找到對應的 roles 索引
-      const theme = state.themes[editTarget.themeIdx];
-      const ringPosition = RING_ORDER.indexOf(editTarget.gridIdx);
-      if(value === ""){
-        if(ringPosition < theme.roles.length){
-          theme.roles.splice(ringPosition, 1);
-        }
-      } else if(ringPosition < theme.roles.length){
-        theme.roles[ringPosition] = value;
-      } else {
-        theme.roles.push(value);
-      }
     }
 
     const affectedThemeIdx = editTarget.kind !== "self" ? editTarget.themeIdx : null;
@@ -1617,17 +1990,146 @@
     }
   }
 
+  // ================= v4：中央服務格兩步 wizard =================
+  let wizardState = null; // { themeIdx, step, draftService, draftTa }
+
+  function openWizardModal(themeIdx){
+    const theme = state.themes[themeIdx];
+    wizardState = { themeIdx, step:1, draftService: theme.service || "", draftTa: theme.ta || "" };
+    renderWizardStep();
+    document.getElementById("wizard-backdrop").classList.add("open");
+    setTimeout(() => document.getElementById("wizard-input").focus(), 50);
+  }
+
+  function renderWizardStep(){
+    const rank = wizardState.themeIdx + 1;
+    const input = document.getElementById("wizard-input");
+    if(wizardState.step === 1){
+      document.getElementById("wizard-step-label").textContent = "步驟 1／2";
+      document.getElementById("wizard-title").textContent = "依重要性填入「核心服務」";
+      document.getElementById("wizard-desc").textContent = `請填賺錢的項目（這是你第 ${rank} 重要的）`;
+      document.getElementById("wizard-field-label").textContent = "核心服務";
+      input.value = wizardState.draftService;
+      input.placeholder = "例：室內設計｜老宅翻修";
+      document.getElementById("wizard-next-btn").textContent = "下一步";
+    } else {
+      document.getElementById("wizard-step-label").textContent = "步驟 2／2";
+      document.getElementById("wizard-title").textContent = "這個服務最主要的 TA 是誰？";
+      document.getElementById("wizard-desc").textContent = "越具體越好";
+      document.getElementById("wizard-field-label").textContent = "TA（目標客群）";
+      input.value = wizardState.draftTa;
+      input.placeholder = "例：台北市有改建潛力物件屋主";
+      document.getElementById("wizard-next-btn").textContent = "存檔";
+    }
+  }
+
+  function wizardNext(){
+    const input = document.getElementById("wizard-input");
+    if(wizardState.step === 1){
+      wizardState.draftService = input.value.trim();
+      wizardState.step = 2;
+      renderWizardStep();
+      input.focus();
+    } else {
+      wizardState.draftTa = input.value.trim();
+      const savedThemeIdx = wizardState.themeIdx; // closeWizardModal() 會把 wizardState 清 null，先存起來
+      const theme = state.themes[savedThemeIdx];
+      theme.service = wizardState.draftService;
+      theme.ta = wizardState.draftTa;
+      persistState();
+      closeWizardModal();
+      renderDesktop();
+      renderMobile();
+      if(currentThemeIdx !== null && currentThemeIdx === savedThemeIdx){
+        redrawMobileDetailInPlace(currentThemeIdx);
+      }
+      // v4 § 11.2：中央服務格存檔 → 自動複寫到對應外圈子宮格中心格，金色 pulse 提示同步完成
+      pulseSubCenter(savedThemeIdx);
+    }
+  }
+
+  function closeWizardModal(){
+    document.getElementById("wizard-backdrop").classList.remove("open");
+    wizardState = null;
+  }
+
+  document.getElementById("wizard-input").addEventListener("keydown", (e) => {
+    if(e.key === "Enter"){ e.preventDefault(); wizardNext(); }
+  });
+
+  function pulseSubCenter(themeIdx){
+    // 兩份 DOM（桌機 9x9 常駐 + 手機子宮格 drill-down 可能未展開）都補上金色 pulse 提示，各自可能不存在
+    ["desktop-sub-center-", "mobile-sub-center-"].forEach(prefix => {
+      const el = document.getElementById(prefix + themeIdx);
+      if(!el) return;
+      el.classList.remove("gold-pulse");
+      void el.offsetWidth; // reflow 重跑動畫
+      el.classList.add("gold-pulse");
+    });
+  }
+
+  // ================= v4：外圈周邊格 5 問引導 modal =================
+  let guideTarget = null; // { themeIdx, gridIdx, cellData }
+
+  function openGuideModal(themeIdx, gridIdx, cellData){
+    const theme = state.themes[themeIdx];
+    guideTarget = { themeIdx, gridIdx, cellData };
+    const serviceLabel = theme.service || "（本人未填）";
+    const taLabel = theme.ta || "尚未填寫 TA";
+    document.getElementById("guide-context").textContent = `${serviceLabel}｜${taLabel}`;
+    const input = document.getElementById("guide-input");
+    input.value = cellData.type === "empty" ? "" : cellData.html;
+    input.placeholder = "例：不動產律師";
+    document.getElementById("guide-backdrop").classList.add("open");
+    setTimeout(() => input.focus(), 50);
+  }
+
+  function closeGuideModal(){
+    document.getElementById("guide-backdrop").classList.remove("open");
+    guideTarget = null;
+  }
+
+  function clearGuideField(){
+    document.getElementById("guide-input").value = "";
+  }
+
+  function saveGuideField(){
+    if(!guideTarget) return;
+    const value = document.getElementById("guide-input").value.trim();
+    const theme = state.themes[guideTarget.themeIdx];
+    const ringPosition = RING_ORDER.indexOf(guideTarget.gridIdx);
+    if(value === ""){
+      if(ringPosition < theme.roles.length){
+        theme.roles.splice(ringPosition, 1);
+      }
+    } else if(ringPosition < theme.roles.length){
+      theme.roles[ringPosition] = value;
+    } else {
+      theme.roles.push(value);
+    }
+
+    const affectedThemeIdx = guideTarget.themeIdx;
+    persistState();
+    closeGuideModal();
+    renderDesktop();
+    renderMobile();
+    if(currentThemeIdx !== null && affectedThemeIdx === currentThemeIdx){
+      redrawMobileDetailInPlace(currentThemeIdx);
+    }
+  }
+
   function redrawMobileDetailInPlace(themeIdx){
     const theme = state.themes[themeIdx];
     const detailGrid = document.getElementById("mobile-detail-grid");
     detailGrid.innerHTML = "";
-    const grid = buildMicroGrid(theme.roles, theme.title, "theme-center");
+    const grid = buildMicroGrid(theme.roles, "", "theme-center");
     grid.forEach((cellData, gridIdx) => {
       const cell = document.createElement("div");
       if(cellData.type === "center"){
-        cell.className = "mobile-cell theme-center";
-        cell.textContent = cellData.html;
-        cell.addEventListener("click", () => onThemeTitleClick(themeIdx, "mobile"));
+        // v4：唯讀（同 desktop 版，編輯入口在中央服務格 wizard）
+        cell.className = "mobile-cell theme-center two-line";
+        cell.innerHTML = twoLineCellHtml(theme.service, theme.ta, themeIdx + 1);
+        cell.id = "mobile-sub-center-" + themeIdx;
       } else {
         cell.className = "mobile-cell " + cellData.cls;
         cell.textContent = cellData.html;
