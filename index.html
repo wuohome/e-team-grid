@@ -1688,16 +1688,21 @@
         grid.forEach((cellData, gridIdx) => {
           const cell = document.createElement("div");
           if(cellData.type === "center"){
-            // v4：外圈子宮格中心格改為唯讀——內容由中央服務格 wizard 存檔後自動複寫，
-            // 不開放此格直接編輯（避免兩個入口寫同一份資料互相蓋掉）
+            // v4.1fix3：原本設計為唯讀鏡射格（避免兩個入口寫同一份資料互相蓋掉），
+            // 但編輯模式下的視覺 affordance（虛線紅框＋✎ icon，見 body.edit-mode .micro-cell::after）
+            // 讓它「看起來可以點」，導致 3 輪獨立 tester 都點這格誤判成 wizard 打不開的 Blocker。
+            // 修法：改「在哪看到格子，就在哪能編輯」——此格點擊也走同一個 openWizardModal(themeIdx)，
+            // 因為 wizard 存檔一律寫 state.themes[themeOrderIdx].service/ta（同一份資料源），
+            // 不管從中央服務格或這裡觸發都是寫同一筆，不會有兩個入口互相蓋掉的問題；
+            // 存檔後 pulseSubCenter() 一樣會讓兩邊同步高亮，行為完全一致。
             cell.className = "micro-cell theme-center two-line";
             cell.innerHTML = twoLineCellHtml(theme.service, theme.ta, themeOrderIdx + 1);
             const filledRoleCount = theme.roles.filter(r => r && r.trim()).length;
             const roleHint = softHintText(filledRoleCount);
             cell.title = (theme.service || "（本人未填）") + "　" + (theme.ta || "尚未填寫 TA")
-              + "　（請至中央服務格編輯，此處自動同步）"
               + (roleHint ? "　專業別" + roleHint : "");
             cell.id = "desktop-sub-center-" + themeOrderIdx;
+            cell.addEventListener("click", () => onThemeTitleClick(themeOrderIdx, "desktop-sub-center"));
           } else {
             cell.className = "micro-cell " + cellData.cls;
             cell.textContent = cellData.html;
@@ -1768,10 +1773,11 @@
     grid.forEach((cellData, gridIdx) => {
       const cell = document.createElement("div");
       if(cellData.type === "center"){
-        // v4：唯讀（同 desktop 版，編輯入口在中央服務格 wizard）
+        // v4.1fix3：同桌機版修法，點擊也走同一個 wizard（見 renderDesktop 內同段註解）
         cell.className = "mobile-cell theme-center two-line";
         cell.innerHTML = twoLineCellHtml(theme.service, theme.ta, themeIdx + 1);
         cell.id = "mobile-sub-center-" + themeIdx;
+        cell.addEventListener("click", () => onThemeTitleClick(themeIdx, "mobile-sub-center"));
       } else {
         cell.className = "mobile-cell " + cellData.cls;
         cell.textContent = cellData.html;
@@ -1829,10 +1835,12 @@
     openEditModal("本人資料（姓名 / 專業別 / 區域，一行一項）", current);
   }
 
-  // v4：中央服務格 → 兩步 wizard（依重要性填核心服務 → 填 TA），origin 含 "preview" 才是中央總覽格觸發點
+  // v4：兩步 wizard 入口（依重要性填核心服務 → 填 TA）。
+  // v4.1fix3：入口點擴大為「中央 3x3 服務格」＋「81 格全展開視圖的子宮格中心格（同一份資料鏡射）」，
+  // 兩者共用同一個 wizard、寫同一筆 state.themes[themeIdx]，origin 純供除錯紀錄不影響行為。
   function onThemeTitleClick(themeIdx, origin){
     if(!isEditMode){
-      return; // 桌機主題總覽格非編輯模式點擊不做事，攤開版已可直接看全部
+      return; // 非編輯模式點擊不做事，攤開版已可直接看全部
     }
     openWizardModal(themeIdx);
   }
@@ -2033,10 +2041,11 @@
     grid.forEach((cellData, gridIdx) => {
       const cell = document.createElement("div");
       if(cellData.type === "center"){
-        // v4：唯讀（同 desktop 版，編輯入口在中央服務格 wizard）
+        // v4.1fix3：同桌機版修法，點擊也走同一個 wizard
         cell.className = "mobile-cell theme-center two-line";
         cell.innerHTML = twoLineCellHtml(theme.service, theme.ta, themeIdx + 1);
         cell.id = "mobile-sub-center-" + themeIdx;
+        cell.addEventListener("click", () => onThemeTitleClick(themeIdx, "mobile-sub-center"));
       } else {
         cell.className = "mobile-cell " + cellData.cls;
         cell.textContent = cellData.html;
