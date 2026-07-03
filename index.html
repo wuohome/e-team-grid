@@ -101,6 +101,20 @@
     color:rgba(255,255,255,0.35);
   }
 
+  /* 兼組全名 badge（個人頁夥伴卡，BNI 香檳金） */
+  .partner-dualteam-badge{
+    display:inline-block;
+    margin:10px 0 0;
+    padding:5px 14px;
+    border-radius:999px;
+    background:rgba(200,160,79,0.16);
+    border:1px solid rgba(200,160,79,0.55);
+    color:var(--gold);
+    font-size:12.5px;
+    font-weight:700;
+    letter-spacing:0.02em;
+  }
+
   .leader-badge{
     flex-shrink:0;
     display:inline-flex;
@@ -967,7 +981,10 @@
     color:var(--red);
   }
 
-  .roster-item.unbuilt{
+  /* 未建檔列灰階：只套在 id/名字/角色/未提供標籤，兼組 badge 例外保持清晰可讀（spec 要求） */
+  .roster-item.unbuilt .roster-id,
+  .roster-item.unbuilt .roster-name,
+  .roster-item.unbuilt .roster-unbuilt-tag{
     opacity:0.5;
   }
 
@@ -984,6 +1001,21 @@
     background:#F1EBDD;
     padding:1px 7px;
     border-radius:999px;
+  }
+
+  /* 兼組 badge（目錄列，金色細框，獨立一行避免擠壓姓名/角色，未建檔灰階列下也要能看清） */
+  .roster-dualteam-tag{
+    display:inline-block;
+    margin-top:2px;
+    font-size:9.5px;
+    font-weight:700;
+    color:var(--gold-deep);
+    background:var(--white);
+    border:1px solid var(--gold);
+    padding:1px 7px;
+    border-radius:999px;
+    line-height:1.4;
+    white-space:nowrap;
   }
 
   /* 漢堡鈕（手機） */
@@ -1093,6 +1125,12 @@
     border-color:#E9DCB8;
   }
 
+  .placeholder-page.is-departed .ph-status{
+    color:var(--ink-soft);
+    background:var(--white);
+    border-color:var(--border-hair);
+  }
+
   /* ================= responsive ================= */
 
   @media (min-width:768px){
@@ -1142,9 +1180,9 @@
 <!-- 遮罩（手機抽屜用） -->
 <div class="roster-backdrop" id="roster-backdrop" onclick="closeRoster()"></div>
 
-<!-- 側邊欄：17 人名單 -->
+<!-- 側邊欄：15 人名單 -->
 <aside class="roster-sidebar" id="roster-sidebar">
-  <div class="roster-title">E組｜房產客戶成長鏈<span class="roster-count">17 人</span></div>
+  <div class="roster-title">E組｜房產客戶成長鏈<span class="roster-count">15 人</span></div>
   <ul class="roster-list" id="roster-list"></ul>
 </aside>
 
@@ -1168,6 +1206,7 @@
       <p class="partner-id" id="active-id">007</p>
       <h1 class="partner-name" id="active-name">張瓊安 <span class="en" id="active-en">Joan</span></h1>
       <p class="partner-meta" id="active-meta">仲介經紀人<span class="sep">｜</span>三重・蘆洲・新莊</p>
+      <p class="partner-dualteam-badge" id="active-dualteam-badge" style="display:none;"></p>
     </div>
     <div class="leader-badge" id="active-leader-badge">★ 組長</div>
   </div>
@@ -1616,33 +1655,45 @@
     if(e.key === "Escape") closeLightbox();
   });
 
-  // ===== 17 人名單（逐字取自 [[_E組總表]]）=====
+  // ===== 15 人名單（逐字取自 [[_E組總表]]，2026-07-03 更新）=====
   // built 不寫死：id 是否在 PEOPLE_DATA（data.js）裡有資料，動態決定灰階/完整頁
-  // 4 位未交件：028 林佩君、030 李慧如 Eva、054 陳品攸、055 吳念鎧（data.js 沒有他們的 key）
+  // 3 位未交件：028 林佩君、030 李慧如 Eva、055 吳念鎧（data.js 沒有他們的 key）
+  // 2026-07-03：017 諸紀平、054 陳品攸退出 E 組，自名單移除（資料檔與原圖不刪，見 DEPARTED_ROSTER）
+  // dualTeam：同時參加其他 Power Team 的兼組標記，依 2026-06-12 分組名單核對（8 位）
   const ROSTER = [
-    { id:"003", name:"劉羿岑", en:"", role:"節能減碳" },
+    { id:"003", name:"劉羿岑", en:"", role:"節能減碳", dualTeam:"D組・商用不動產升級鏈" },
     { id:"005", name:"劉恩秀", en:"Joan", role:"人力派遣" },
     { id:"007", name:"張瓊安", en:"Joan", role:"仲介經紀人", leader:true },
-    { id:"017", name:"諸紀平", en:"", role:"室內設計置產" },
-    { id:"023", name:"林必涵", en:"", role:"廠房資產管理" },
-    { id:"025", name:"王佳筠", en:"", role:"建案代銷" },
-    { id:"026", name:"楊之慧", en:"", role:"金融後台交割" },
-    { id:"028", name:"林佩君", en:"", role:"仲介經紀人" },
-    { id:"030", name:"李慧如", en:"Eva", role:"再造回收鐵網" },
-    { id:"031", name:"凃馨文", en:"Wen", role:"家電 B2B" },
+    { id:"023", name:"林必涵", en:"", role:"廠房資產管理", dualTeam:"A組・地主改建整合鏈" },
+    { id:"025", name:"王佳筠", en:"", role:"建案代銷", dualTeam:"A組・地主改建整合鏈" },
+    { id:"026", name:"楊之慧", en:"", role:"金融後台交割", dualTeam:"A組・地主改建整合鏈" },
+    { id:"028", name:"林佩君", en:"", role:"仲介經紀人", dualTeam:"A組・地主改建整合鏈" },
+    { id:"030", name:"李慧如", en:"Eva", role:"再造回收鐵網", dualTeam:"C組・高齡安居×資產傳承" },
+    { id:"031", name:"凃馨文", en:"Wen", role:"家電 B2B", dualTeam:"A組・地主改建整合鏈" },
     { id:"033", name:"宋馨巧", en:"", role:"韓語教學" },
     { id:"043", name:"洪嘉璿", en:"左左", role:"MMT 天賦諮詢" },
     { id:"047", name:"蔡馨葳", en:"Mandy", role:"人壽財務規劃" },
     { id:"050", name:"謝夢瑰", en:"Dian", role:"高資產房地產" },
-    { id:"052", name:"張怡蘋", en:"April", role:"工程顧問" },
-    { id:"054", name:"陳品攸", en:"", role:"商業法律顧問" },
+    { id:"052", name:"張怡蘋", en:"April", role:"工程顧問", dualTeam:"A組・地主改建整合鏈" },
     { id:"055", name:"吳念鎧", en:"", role:"仲介經紀人（大新竹）" }
   ];
+
+  // 已退出 E 組但資料檔仍保留（分會資產），供 ?id= 直開時顯示友善訊息，不走 404
+  const DEPARTED_ROSTER = {
+    "017": { name:"諸紀平" },
+    "054": { name:"陳品攸" }
+  };
 
   const DEFAULT_ID = "007";
 
   function isBuilt(id){
     return typeof PEOPLE_DATA !== "undefined" && Object.prototype.hasOwnProperty.call(PEOPLE_DATA, id);
+  }
+
+  // dualTeam 字串「D組・商用不動產升級鏈」取最前的組別字母（D）做列表短 badge
+  function dualTeamShortLabel(dualTeam){
+    const m = dualTeam.match(/^([A-Za-z])組/);
+    return m ? `兼${m[1]}組` : "兼組";
   }
 
   function renderRoster(){
@@ -1658,10 +1709,13 @@
 
       const nameLabel = p.en ? `${p.name} ${p.en}` : p.name;
       const leaderMark = p.leader ? "　★" : "";
+      const dualTeamTag = p.dualTeam
+        ? `<span class="roster-dualteam-tag" title="${p.dualTeam}">${dualTeamShortLabel(p.dualTeam)}</span>`
+        : "";
 
       btn.innerHTML = `
         <span class="roster-id">${p.id}</span>
-        <span class="roster-name">${nameLabel}${leaderMark}</span>
+        <span class="roster-name">${nameLabel}${leaderMark}</span>${dualTeamTag}
         <span class="roster-role">${p.role}</span>
         ${!built ? '<span class="roster-unbuilt-tag">未提供</span>' : ""}
       `;
@@ -1681,6 +1735,14 @@
     if(data.self.area) metaParts.push(data.self.area);
     document.getElementById("active-meta").innerHTML = metaParts.join('<span class="sep">｜</span>');
     document.getElementById("active-leader-badge").style.display = (data.leader || (roster && roster.leader)) ? "" : "none";
+
+    const dualTeamBadge = document.getElementById("active-dualteam-badge");
+    if(roster && roster.dualTeam){
+      dualTeamBadge.textContent = `兼 ${roster.dualTeam}`;
+      dualTeamBadge.style.display = "";
+    } else {
+      dualTeamBadge.style.display = "none";
+    }
 
     document.getElementById("original-photo").src = data.photo;
     document.getElementById("original-photo").alt = id + " " + data.self.name + " 手寫九宮格原圖";
@@ -1721,6 +1783,7 @@
       const statusEl = document.getElementById("ph-status");
       const contentEl = document.getElementById("placeholder-content");
       statusEl.textContent = "九宮格尚未提供";
+      contentEl.classList.remove("is-departed");
       contentEl.classList.add("is-unbuilt");
 
       const url = new URL(window.location.href);
@@ -1736,6 +1799,28 @@
 
     closeRoster();
     window.scrollTo({ top:0, behavior:"instant" in window ? "instant" : "auto" });
+  }
+
+  // ===== 已退出 E 組夥伴：友善提示頁（重用佔位頁樣式，不 fallback、不 404）=====
+  function showDepartedNotice(id){
+    const departed = DEPARTED_ROSTER[id];
+    if(!departed) return;
+
+    document.getElementById("page-active").style.display = "none";
+    document.getElementById("page-placeholder").style.display = "";
+    currentId = null;
+
+    document.getElementById("ph-id").textContent = id;
+    document.getElementById("ph-name").textContent = departed.name;
+    document.getElementById("ph-role").textContent = "";
+
+    const statusEl = document.getElementById("ph-status");
+    const contentEl = document.getElementById("placeholder-content");
+    statusEl.textContent = "此夥伴已不在 E 組名單";
+    contentEl.classList.remove("is-unbuilt");
+    contentEl.classList.add("is-departed");
+
+    document.querySelectorAll(".roster-item").forEach(el => el.classList.remove("active"));
   }
 
   // ===== 手機抽屜開關 =====
@@ -1913,14 +1998,22 @@
   initCompareWheelZoom();
   initComparePan();
 
-  // ===== 初始化：讀 URL ?id=NNN 決定初始顯示誰，無效/未帶參數則預設 007 =====
+  // ===== 初始化：讀 URL ?id=NNN 決定初始顯示誰 =====
+  // 三種情況：現役名單 → 正常開該人；已退出名單（DEPARTED_ROSTER）→ 友善提示，不 fallback 不 404；
+  // 其餘無效/未帶參數 → 預設 007
   function initApp(){
     const url = new URL(window.location.href);
     const requestedId = url.searchParams.get("id");
-    const validRoster = ROSTER.some(p => p.id === requestedId);
-    const initialId = validRoster ? requestedId : DEFAULT_ID;
 
     renderRoster();
+
+    if(requestedId && Object.prototype.hasOwnProperty.call(DEPARTED_ROSTER, requestedId)){
+      showDepartedNotice(requestedId);
+      return;
+    }
+
+    const validRoster = ROSTER.some(p => p.id === requestedId);
+    const initialId = validRoster ? requestedId : DEFAULT_ID;
     selectPartner(initialId);
   }
 
