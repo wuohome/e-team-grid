@@ -1,6 +1,21 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
+<script>
+/* LINE WebView 強制跳外部瀏覽器 — 共用 snippet，來源 wuohome-ragic/line-external-browser.js
+   （先例：from.html commit 4ad9e8e、BNI PowerTeam 接龍 commit fd8ed9f）
+   必須放在 <head> 最頂端、其他任何 script/meta 之前，搶在頁面渲染與 data.js 載入前執行。 */
+(function () {
+  var ua = navigator.userAgent || '';
+  var isLine = /Line\//.test(ua);
+  var url = new URL(location.href);
+  var alreadyRedirected = url.searchParams.has('openExternalBrowser');
+  if (isLine && !alreadyRedirected) {
+    url.searchParams.set('openExternalBrowser', '1');
+    window.location.href = url.toString();
+  }
+})();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <!-- v4.1fix2：GitHub Pages index.html 本身帶 Cache-Control: max-age=600（無法自訂 headers），
