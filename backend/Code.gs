@@ -16,6 +16,26 @@
 
 var SHEET_NAME = 'E組資料';
 var HEADERS = ['id', 'name', 'updated_at', 'last_editor', 'data_json'];
+var ID_COL_INDEX = HEADERS.indexOf('id'); // 0-based，供整欄鎖格式用
+
+// ====== 共用：id 正規化 ======
+
+/**
+ * normalizeId(x)
+ * 統一把 id 轉成三位數字字串（"003"）。防禦三種 Google Sheet 可能回傳的形態：
+ * number（3）／字串數字（"3"）／已經是三位字串（"003"）。
+ * 踩坑根因：Sheet 儲存格若非純文字格式，會把「003」自動辨識成數字 3，前導零消失
+ * （同型坑見 [[技術筆記/踩坑速查]] §「Google Sheet 把『2026-08』偷轉成日期數字」）。
+ * 非數字 id（理論上不會發生，但防禦）→ 原樣 trim 後回傳，不硬套 padStart。
+ */
+function normalizeId(x) {
+  var s = String(x == null ? '' : x).trim();
+  if (s === '') return '';
+  if (/^\d+$/.test(s)) {
+    return s.length >= 3 ? s : ('000' + s).slice(-3);
+  }
+  return s; // 非純數字格式的 id，不勉強補零
+}
 
 // ====== 一鍵初始化 ======
 
@@ -44,9 +64,15 @@ function setup() {
   if (!sh) sh = ss.insertSheet(SHEET_NAME);
   sh.clear();
 
+  // ★ 雙保險第一層：整個 id 欄（含未來新增列的成長空間）先鎖純文字格式，
+  //   再寫值，才不會被 Google Sheet 自動辨識成數字吃掉前導零（003 → 3）。
+  //   鎖格式要在 setValues 之前，順序反了沒用（先寫值再鎖格式不會回溯轉換既有值）。
+  var idColLetter = String.fromCharCode(65 + ID_COL_INDEX); // 0→'A'
+  sh.getRange(idColLetter + '1:' + idColLetter + (INIT_DATA.length + 50)).setNumberFormat('@');
+
   var rows = INIT_DATA.map(function (person) {
     return [
-      person.id,
+      normalizeId(person.id),
       person.name,
       Utilities.formatDate(new Date(), 'Asia/Taipei', 'yyyy-MM-dd HH:mm'),
       '（初始匯入）',
@@ -98,7 +124,7 @@ function doGet(e) {
     return jsonOutput({ ok: false, error: '找不到分頁：' + SHEET_NAME + '（請先跑 setup()）' });
   }
 
-  var wantId = (e && e.parameter && e.parameter.id) ? String(e.parameter.id).trim() : '';
+  var wantId = (e && e.parameter && e.parameter.id) ? normalizeId(e.parameter.id) : '';
   var all = readAllRows(sh);
 
   if (wantId) {
@@ -128,7 +154,8 @@ function readAllRows(sh) {
   var result = {};
   for (var i = 1; i < values.length; i++) {
     var row = values[i];
-    var id = String(row[idCol] || '').trim();
+    // ★ 雙保險第二層：即使 Sheet 型別再被動過（number 3 / 字串 "3"），API 層一律吐正規化後的三位字串。
+    var id = normalizeId(row[idCol]);
     if (!id) continue;
 
     var state = { self: { name: '', en: '', role: '', area: '' }, themes: [] };
@@ -180,7 +207,7 @@ function doPost(e) {
     return jsonOutput({ ok: false, error: 'payload 不是合法 JSON：' + err.message });
   }
 
-  var id = String(payload.id || '').trim();
+  var id = normalizeId(payload.id);
   var editor = String(payload.editor || '（未填名）').trim();
   var changes = Array.isArray(payload.changes) ? payload.changes : [];
   var data = payload.data;
@@ -204,7 +231,8 @@ function doPost(e) {
 
   var targetRow = -1;
   for (var i = 1; i < values.length; i++) {
-    if (String(values[i][idCol] || '').trim() === id) {
+    // ★ 雙保險第二層（寫入側）：Sheet 現存值不管是 number 3 / "3" / "003"，正規化後再比對。
+    if (normalizeId(values[i][idCol]) === id) {
       targetRow = i + 1; // sheet 是 1-indexed，values 是 0-indexed
       break;
     }
@@ -217,6 +245,9 @@ function doPost(e) {
   var now = Utilities.formatDate(new Date(), 'Asia/Taipei', 'yyyy-MM-dd HH:mm');
   var name = data.self.name || values[targetRow - 1][nameCol] || id;
 
+  // ★ 雙保險第一層（寫入側）：每次覆寫該列 id 前重新鎖一次純文字格式再寫值，
+  //   防禦「Sheet 欄位格式事後被人工改回一般格式」的邊界情況（例如 Joan 手動排序/貼上動到格式）。
+  sh.getRange(targetRow, idCol + 1).setNumberFormat('@').setValue(id);
   sh.getRange(targetRow, dataCol + 1).setValue(JSON.stringify(data));
   sh.getRange(targetRow, updatedCol + 1).setValue(now);
   sh.getRange(targetRow, editorCol + 1).setValue(editor);
