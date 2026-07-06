@@ -10,7 +10,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <title>E組九宮格｜房產客戶成長鏈</title>
-<script src="data.js?v=20260706b7fix"></script>
+<script src="data.js?v=20260706roster052"></script>
 <style>
   :root{
     --white:#FFFFFF;
@@ -1390,9 +1390,9 @@
 <!-- 遮罩（手機抽屜用） -->
 <div class="roster-backdrop" id="roster-backdrop" onclick="closeRoster()"></div>
 
-<!-- 側邊欄：15 人名單 -->
+<!-- 側邊欄：14 人名單 -->
 <aside class="roster-sidebar" id="roster-sidebar">
-  <div class="roster-title">E組｜房產客戶成長鏈<span class="roster-count">15 人</span></div>
+  <div class="roster-title">E組｜房產客戶成長鏈<span class="roster-count">14 人</span></div>
   <ul class="roster-list" id="roster-list"></ul>
 </aside>
 
@@ -2363,11 +2363,12 @@
     document.getElementById("tab-panel-photo").hidden = isGrid;
   }
 
-  // ===== 15 人名單（逐字取自 [[_E組總表]]，2026-07-03 更新）=====
+  // ===== 14 人名單（逐字取自 [[_E組總表]]，2026-07-06 更新）=====
   // built 不寫死：id 是否在 PEOPLE_DATA（data.js）裡有資料，動態決定灰階/完整頁
   // 3 位未交件：028 林佩君、030 李慧如 Eva、055 吳念鎧（data.js 沒有他們的 key）
   // 2026-07-03：017 諸紀平、054 陳品攸退出 E 組，自名單移除（資料檔與原圖不刪，見 DEPARTED_ROSTER）
-  // dualTeam：同時參加其他 Power Team 的兼組標記，依 2026-06-12 分組名單核對（8 位）
+  // 2026-07-06：052 張怡蘋轉出 E 組（原兼 A 組，轉往他組專職），自名單移除，dualTeam 標記一併清除
+  // dualTeam：同時參加其他 Power Team 的兼組標記，依 2026-06-12 分組名單核對（現餘 7 位）
   const ROSTER = [
     { id:"003", name:"劉羿岑", en:"", role:"節能減碳", dualTeam:"D組・商用不動產升級鏈" },
     { id:"005", name:"劉恩秀", en:"Joan", role:"人力派遣" },
@@ -2382,14 +2383,14 @@
     { id:"043", name:"洪嘉璿", en:"左左", role:"MMT 天賦諮詢" },
     { id:"047", name:"蔡馨葳", en:"Mandy", role:"人壽財務規劃" },
     { id:"050", name:"謝夢瑰", en:"Dian", role:"高資產房地產" },
-    { id:"052", name:"張怡蘋", en:"April", role:"工程顧問", dualTeam:"A組・地主改建整合鏈" },
     { id:"055", name:"吳念鎧", en:"", role:"仲介經紀人（大新竹）" }
   ];
 
   // 已退出 E 組但資料檔仍保留（分會資產），供 ?id= 直開時顯示友善訊息，不走 404
   const DEPARTED_ROSTER = {
     "017": { name:"諸紀平" },
-    "054": { name:"陳品攸" }
+    "054": { name:"陳品攸" },
+    "052": { name:"張怡蘋" }
   };
 
   const DEFAULT_ID = "007";
