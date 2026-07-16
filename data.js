@@ -186,8 +186,12 @@ const PEOPLE_DATA = {
   // 讓 index.html 的 isBuilt() 判定為 true → 走完整九宮格頁面（非 placeholder），
   // GAS hydrateFromBackend() 到手後會用後端 data_json 靜默覆蓋 self/themes（本人若已填東西即顯示）。
   // 無 photo 欄位 → renderOriginalPhoto() 自動顯示「尚未提供手寫版」（§ 11.7 既有機制，不必新寫）。
+  // 2026-07-16：028 已補 photo（Joan 提供的表格版照片，非手寫原圖，比照現有機制掛「原始手寫圖」分頁顯示）——
+  // photo 欄位不在 GAS schema 內（Code.gs doGet/doPost 只讀寫 self/themes），純前端靜態欄位，
+  // hydrateFromBackend() 的 Object.assign 只覆蓋 self/themes 不動 photo，故直接寫在 data.js 即可、不用動後端。
   "028": {
     self: { name:"林佩君", en:"", role:"", area:"" },
+    photo: "images/028.jpg",
     themes: [
       { service:"", ta:"", roles:["","","","","","","",""] },
       { service:"", ta:"", roles:["","","","","","","",""] },
