@@ -1659,7 +1659,10 @@
         PEOPLE_DATA[id] = Object.assign({}, existing, { self: person.self, themes: person.themes });
       });
       // 若目前顯示的人有更新，重新載入該人的 state 並重繪（不打斷使用者正在編輯的 modal）
+      // 2026-07-16 修復：一併重繪夥伴卡頁首（renderPartnerHeader），否則 self.role/area 只在
+      // PEOPLE_DATA 更新、九宮格本人格（讀 state）跟著對，但頁首（只在 renderActivePage 渲染過一次）沒人再叫，維持冷啟當下的舊值。
       if(currentId && isBuilt(currentId) && !isEditMode){
+        renderPartnerHeader(currentId);
         state = loadState(currentId);
         renderDesktop();
         renderMobile();
@@ -2384,8 +2387,13 @@
     });
   }
 
-  function renderActivePage(id){
-    // 填夥伴卡＋原圖 src＋9x9/3x3 render，供已建檔的人使用
+  // 夥伴卡頁首（active-id／active-name／active-meta／組長徽章／兼組徽章）獨立成一支，
+  // 供 renderActivePage()（切換夥伴／首次載入）與 hydrateFromBackend()（GAS 資料到手後靜默更新目前頁）共用。
+  // 2026-07-16 修復：028 案發現 hydrateFromBackend() 過去只重繪 renderDesktop/renderMobile（讀 state，資料已對），
+  // 沒重繪這段頁首（讀 PEOPLE_DATA 直出，只在 renderActivePage 執行過一次）——
+  // 若某人 data.js 空殼 self.role/area 是空字串（如 028 首次補值），冷啟當下先渲染的頁首就會是空的，
+  // 之後 GAS 資料靜默覆蓋 PEOPLE_DATA 也救不回來，因為沒人再叫這段渲染。抽成函式讓兩處都能重繪即修復。
+  function renderPartnerHeader(id){
     const data = PEOPLE_DATA[id];
     const roster = ROSTER.find(p => p.id === id);
 
@@ -2403,7 +2411,13 @@
     } else {
       dualTeamBadge.style.display = "none";
     }
+  }
 
+  function renderActivePage(id){
+    // 填夥伴卡＋原圖 src＋9x9/3x3 render，供已建檔的人使用
+    const data = PEOPLE_DATA[id];
+
+    renderPartnerHeader(id);
     renderOriginalPhoto(id, data);
     switchPageTab("grid"); // 每次切換夥伴一律重置回預設「互動九宮格」tab
     closeAllModals(); // v4.1 修復：切換夥伴時若有殘留開啟的 modal（未正常關閉），一併清除，避免下個人的格子點擊被卡住的 backdrop 攔截
