@@ -18,6 +18,8 @@
 </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<!-- 個資聚合頁（14 人真名＋自行維護資料），比照姊妹站先例不被搜尋引擎索引 -->
+<meta name="robots" content="noindex">
 <!-- v4.1fix2：GitHub Pages index.html 本身帶 Cache-Control: max-age=600（無法自訂 headers），
      這幾個 meta 是瀏覽器層防快取提示上限；根本解仍是 GAS 部署鐵律裡的 cache-busting query string，
      但 index.html 這個檔名本身不能加版本號（GitHub Pages 固定路徑），故雙管齊下。 -->
@@ -1242,6 +1244,60 @@
     padding:0;
   }
 
+  /* ================= 全站字級縮放控件（右下角固定，2026-07-21） ================= */
+  .zoom-control{
+    position:fixed;
+    right:18px;
+    bottom:18px;
+    z-index:90;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+  }
+  .zoom-label{
+    font-size:11px;
+    font-weight:700;
+    color:var(--ink-soft);
+    background:var(--white);
+    border:1px solid var(--border-hair);
+    border-radius:999px;
+    padding:2px 9px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.08);
+    display:none; /* 100% 時隱藏；非 100% 由 JS 顯示 */
+  }
+  .zoom-label.show{ display:inline-block; }
+  .zoom-btn-row{
+    display:flex;
+    gap:8px;
+  }
+  .zoom-btn{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    border:1px solid var(--border-hair);
+    background:var(--white);
+    color:var(--ink);
+    font-size:19px;
+    font-weight:700;
+    line-height:1;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 2px 10px rgba(0,0,0,0.08);
+    transition:border-color 160ms var(--ease-out), color 160ms var(--ease-out);
+    font-family:inherit;
+  }
+  .zoom-btn:hover:not(:disabled){
+    border-color:var(--red);
+    color:var(--red);
+  }
+  .zoom-btn:disabled{
+    opacity:0.35;
+    cursor:default;
+  }
+
   /* ================= v4：wizard／5 問引導 modal ================= */
 
   .wizard-step{
@@ -1558,6 +1614,235 @@
     border-color:var(--border-hair);
   }
 
+  /* ================= 2026-07-21：「E 組如何運作」說明頁（?page=about） ================= */
+
+  .roster-about-link{
+    display:block;
+    margin:0 16px 14px;
+    padding:9px 14px;
+    border-radius:10px;
+    background:var(--gray-bg);
+    border:1px solid var(--gold);
+    color:var(--gold-deep);
+    font-size:12.5px;
+    font-weight:700;
+    text-align:center;
+    text-decoration:none;
+    transition:background 140ms var(--ease-out);
+  }
+
+  .roster-about-link:hover{
+    background:#F1EBDD;
+  }
+
+  .about-intro-card{
+    background:var(--gray-bg);
+    border-radius:14px;
+    padding:22px 24px;
+    font-size:15px;
+    line-height:1.9;
+    color:var(--ink);
+  }
+
+  .about-intro-card p{margin:0 0 8px;}
+  .about-intro-card p:last-child{margin-bottom:0;}
+
+  .linkage-cards-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+    gap:14px;
+  }
+
+  .linkage-card{
+    background:var(--white);
+    border:1px solid var(--border-hair);
+    border-radius:12px;
+    padding:16px 18px;
+  }
+
+  .linkage-card-head{
+    margin:0 0 10px;
+  }
+
+  .linkage-card-name{
+    font-size:15px;
+    font-weight:800;
+    color:var(--ink);
+    text-decoration:none;
+  }
+
+  .linkage-card-name:hover{color:var(--red);}
+
+  .linkage-row{
+    font-size:12.5px;
+    line-height:1.65;
+    color:var(--ink-soft);
+    padding:5px 0;
+    border-top:1px solid var(--border-hair);
+  }
+
+  .linkage-row:first-of-type{border-top:none;}
+
+  .linkage-row a{color:var(--red); text-decoration:none; font-weight:700;}
+  .linkage-row a:hover{text-decoration:underline;}
+  .linkage-row b{color:var(--ink); font-weight:700;}
+
+  .linkage-row-mutual{
+    background:#FDF8EC;
+    border:1px solid var(--gold);
+    border-top:1px solid var(--gold) !important;
+    border-radius:8px;
+    padding:8px 10px;
+    margin-bottom:4px;
+  }
+
+  .linkage-mutual-tag{
+    display:inline-block;
+    margin-right:6px;
+    padding:1px 8px;
+    border-radius:999px;
+    background:var(--gold);
+    color:#3A2C0E;
+    font-size:11px;
+    font-weight:800;
+  }
+
+  .linkage-empty{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin:0;
+  }
+
+  .about-warning-banner{
+    background:#FBF3D9;
+    border:1px solid #E9DCB8;
+    color:#8A6D2A;
+    font-size:13px;
+    font-weight:600;
+    padding:10px 16px;
+    border-radius:10px;
+    margin-bottom:14px;
+  }
+
+  .about-table-wrap{
+    overflow-x:auto;
+    border:1px solid var(--border-hair);
+    border-radius:12px;
+  }
+
+  .about-collab-table{
+    width:100%;
+    min-width:560px;
+    border-collapse:collapse;
+    font-size:13px;
+  }
+
+  .about-collab-table th{
+    background:var(--gray-bg);
+    text-align:left;
+    padding:12px 16px;
+    font-weight:800;
+    color:var(--ink);
+    white-space:nowrap;
+  }
+
+  .about-collab-table td{
+    padding:12px 16px;
+    border-top:1px solid var(--border-hair);
+    color:var(--ink-soft);
+    vertical-align:top;
+  }
+
+  .about-collab-table td:first-child{
+    font-weight:700;
+    color:var(--ink);
+    white-space:nowrap;
+  }
+
+  .about-collab-table a{color:var(--red); text-decoration:none; font-weight:700;}
+  .about-collab-table a:hover{text-decoration:underline;}
+
+  /* 2026-07-21：「這條鏈還缺誰」缺口區塊 */
+  .gap-subhead{
+    font-size:15px;
+    font-weight:800;
+    color:var(--ink);
+    margin:22px 0 10px;
+  }
+
+  .gap-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));
+    gap:12px;
+    margin-bottom:8px;
+  }
+
+  .gap-card{
+    background:var(--white);
+    border:1px solid var(--border-hair);
+    border-radius:12px;
+    padding:14px 16px;
+  }
+
+  .gap-card-role{
+    font-size:14px;
+    font-weight:800;
+    color:var(--ink);
+    margin:0 0 8px;
+  }
+
+  .gap-card-heat{
+    font-size:11px;
+    color:var(--ink-soft);
+    font-weight:600;
+    margin-left:4px;
+  }
+
+  .gap-person-row{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    display:flex;
+    align-items:center;
+    gap:6px;
+    flex-wrap:wrap;
+    padding:4px 0;
+    border-top:1px solid var(--border-hair);
+  }
+
+  .gap-person-row:first-of-type{border-top:none; padding-top:0;}
+
+  .gap-group-badge{
+    display:inline-block;
+    font-size:9.5px;
+    font-weight:700;
+    color:var(--gold-deep);
+    background:var(--white);
+    border:1px solid var(--gold);
+    padding:1px 7px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+
+  /* 第2層：整個分會都沒有——虛線＋，呼應全站「待補」語彙（比照 .focus-cell.f-empty） */
+  .gap-card-l2{
+    background:transparent;
+    border:1.5px dashed #CBC6BD;
+  }
+
+  .gap-card-l2 .gap-card-role::before{
+    content:"＋ ";
+    color:var(--gold-deep);
+    font-weight:800;
+  }
+
+  .gap-card-l2-note{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin:0;
+  }
+
+  #personal-linkage-block .linkage-card{margin-top:0;}
+
   /* ================= responsive ================= */
 
   @media (min-width:768px){
@@ -1615,6 +1900,7 @@
 <!-- 側邊欄：14 人名單 -->
 <aside class="roster-sidebar" id="roster-sidebar">
   <div class="roster-title">E組｜房產客戶成長鏈<span class="roster-count">14 人</span></div>
+  <a href="?page=about" class="roster-about-link" id="roster-about-link" onclick="return goToAboutPage(event);">🔗 E 組如何運作</a>
   <ul class="roster-list" id="roster-list"></ul>
 </aside>
 
@@ -1636,7 +1922,7 @@
   <div class="partner-card">
     <div>
       <p class="partner-id" id="active-id">007</p>
-      <h1 class="partner-name" id="active-name">張瓊安 <span class="en" id="active-en">Joan</span></h1>
+      <h1 class="partner-name" id="active-name">張瓊安 <span class="en" id="active-en"></span></h1>
       <p class="partner-meta" id="active-meta">仲介經紀人<span class="sep">｜</span>三重・蘆洲・新莊</p>
       <p class="partner-dualteam-badge" id="active-dualteam-badge" style="display:none;"></p>
     </div>
@@ -1711,6 +1997,12 @@
   </div>
   <!-- /#tab-panel-photo -->
 
+  <!-- 2026-07-21：個人頁連動回連（同 ?page=about 連動引擎、同一份資料） -->
+  <div class="section-head" id="personal-linkage-head" style="display:none;">
+    <h2>🔗 你在 E 組能連動的人</h2>
+  </div>
+  <div id="personal-linkage-block" style="display:none;"></div>
+
   <footer>
     <span>E組｜房產客戶成長鏈</span>
     <a href="#" class="footer-edit-link" id="footer-edit-link" onclick="event.preventDefault(); toggleEditMode(true);">✏️ 編輯這頁</a>
@@ -1728,6 +2020,57 @@
       <span class="ph-status" id="ph-status"></span>
     </div>
   </div>
+
+  <!-- 2026-07-21：「E 組如何運作」說明頁（?page=about，本機預覽版） -->
+  <div id="page-about" style="display:none;">
+
+    <div class="section-head">
+      <h2>E 組是什麼</h2>
+    </div>
+    <div class="about-intro-card">
+      <p>華都更分會今年有五條產業鏈（A–E），E 組拿到的題目是「跨產業客戶轉介系統」——房產客戶成長鏈。</p>
+      <p>一個客戶從任何一位夥伴手上進來，整條鏈的人都有生意做。</p>
+      <p>用分會的話說：「我們不是一個群組。我們是一個事業體。」</p>
+    </div>
+
+    <div class="section-head">
+      <h2>誰跟誰能連動</h2>
+      <span class="section-note" id="about-linkage-summary"></span>
+    </div>
+    <div class="linkage-cards-grid" id="linkage-cards-grid"></div>
+
+    <div class="section-head">
+      <h2>協作對接表</h2>
+      <span class="section-note">示意版，資料取自簡報 P14 五類服務對象</span>
+    </div>
+    <div class="about-warning-banner">⚠ 示意內容——待組聚認領後正式啟用</div>
+    <div class="about-table-wrap">
+      <table class="about-collab-table">
+        <thead>
+          <tr><th>客戶類型</th><th>他會需要什麼</th><th>組內誰能接</th></tr>
+        </thead>
+        <tbody id="about-collab-tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="section-head">
+      <h2>這條鏈還缺誰</h2>
+      <span class="section-note" id="about-gap-summary"></span>
+    </div>
+    <div class="about-warning-banner">⚠ 缺口由 14 人九宮格資料自動反推＋分會白金名冊比對（2026-07-10 版快照）——組聚認領前僅供參考</div>
+
+    <h3 class="gap-subhead">分會其他組有人做</h3>
+    <div class="gap-grid" id="gap-l1-grid"></div>
+
+    <h3 class="gap-subhead">整個分會都沒有</h3>
+    <div class="gap-grid" id="gap-l2-grid"></div>
+
+    <footer>
+      <span id="about-provenance">本頁連動關係由 14 位夥伴自行維護的九宮格資料即時計算生成</span>
+    </footer>
+
+  </div>
+  <!-- /#page-about -->
 
 </div>
 
@@ -1792,6 +2135,15 @@
 
 <!-- 存檔狀態提示（後端模式：存檔中／已存檔／失敗可重試） -->
 <div class="save-toast" id="save-toast"></div>
+
+<!-- 全站字級縮放控件（右下角固定，body zoom，localStorage 記憶，2026-07-21） -->
+<div class="zoom-control" id="zoom-control">
+  <span class="zoom-label" id="zoom-label"></span>
+  <div class="zoom-btn-row">
+    <button type="button" class="zoom-btn" id="zoom-out-btn" aria-label="縮小字級" onclick="adjustZoom(-0.1)">−</button>
+    <button type="button" class="zoom-btn" id="zoom-in-btn" aria-label="放大字級" onclick="adjustZoom(0.1)">＋</button>
+  </div>
+</div>
 
 <!-- 投影 focus overlay：點宮格放大逐區講（僅投影模式） -->
 <div class="focus-overlay" id="focus-overlay">
@@ -1879,6 +2231,11 @@
         // 後端沒有 photo/leader 這類純前端展示欄位，保留 data.js 原本的、只覆蓋 self/themes。
         const existing = PEOPLE_DATA[id] || {};
         PEOPLE_DATA[id] = Object.assign({}, existing, { self: person.self, themes: person.themes });
+        // 2026-07-21：頁尾 provenance 用——只取現役 E 組名單（ROSTER）內的 updated_at 比大小，
+        // 避免已退出名單（DEPARTED_ROSTER，如 052）殘留資料把日期洗成不相關的舊/新值。
+        if(person.updated_at && ROSTER.some(p => p.id === id)){
+          if(!latestUpdatedAt || person.updated_at > latestUpdatedAt) latestUpdatedAt = person.updated_at;
+        }
       });
       // 若目前顯示的人有更新，重新載入該人的 state 並重繪（不打斷使用者正在編輯的 modal）
       // 2026-07-16 修復：一併重繪夥伴卡頁首（renderPartnerHeader），否則 self.role/area 只在
@@ -1889,6 +2246,8 @@
         renderDesktop();
         renderMobile();
       }
+      // 2026-07-21：連動引擎在 hydrate 到手後用活資料靜默重算重繪（?page=about／個人頁回連區塊）
+      recomputeLinkage();
     } catch(err){
       console.warn("[hydrateFromBackend] 後端資料抓取失敗，維持 data.js 內容：", err.message);
     }
@@ -2058,6 +2417,7 @@
 
     if(!BACKEND_ENABLED){
       localStorage.setItem(storageKeyFor(currentId), JSON.stringify({ self: state.self, themes: state.themes }));
+      syncPeopleDataAndRelink();
       return true;
     }
 
@@ -2070,6 +2430,7 @@
       });
       // 後端寫入成功後，localStorage 只當快取用（跨裝置真相源已是 Sheet）
       localStorage.setItem(storageKeyFor(currentId), JSON.stringify({ self: state.self, themes: state.themes }));
+      syncPeopleDataAndRelink();
       showToast("已存檔", false);
       return true;
     } catch(err){
@@ -2081,6 +2442,13 @@
       }));
       return false;
     }
+  }
+
+  // 2026-07-21：夥伴編輯存檔成功後，把 state（目前編輯中這個人的最新 self/themes）同步回 PEOPLE_DATA，
+  // 讓連動引擎不用等下一次 hydrate 就能吃到剛存的內容，並靜默重算重繪目前看得到的連動區塊。
+  function syncPeopleDataAndRelink(){
+    PEOPLE_DATA[currentId] = Object.assign({}, PEOPLE_DATA[currentId], { self: state.self, themes: state.themes });
+    recomputeLinkage();
   }
 
   function resetToDefault(){
@@ -2650,7 +3018,7 @@
   const ROSTER = [
     { id:"003", name:"劉羿岑", en:"", role:"節能減碳", dualTeam:"D組・商用不動產升級鏈" },
     { id:"005", name:"劉恩秀", en:"Joan", role:"人力派遣" },
-    { id:"007", name:"張瓊安", en:"Joan", role:"仲介經紀人", leader:true },
+    { id:"007", name:"張瓊安", en:"", role:"仲介經紀人", leader:true },
     { id:"023", name:"林必涵", en:"", role:"廠房資產管理", dualTeam:"A組・地主改建整合鏈" },
     { id:"025", name:"王佳筠", en:"", role:"建案代銷", dualTeam:"A組・地主改建整合鏈" },
     { id:"026", name:"楊之慧", en:"", role:"金融後台交割", dualTeam:"A組・地主改建整合鏈" },
@@ -2675,6 +3043,524 @@
 
   function isBuilt(id){
     return typeof PEOPLE_DATA !== "undefined" && Object.prototype.hasOwnProperty.call(PEOPLE_DATA, id);
+  }
+
+  // ============================================================
+  // 2026-07-21：「誰跟誰能連動」自動連動引擎（?page=about 核心）
+  // 演算法：對每人 A 的每個 roles[] 角色詞，比對其他人 B 的身分詞集
+  // （B 的 self.role ＋ 8 個 themes[].service）。字典＋黑名單條數與比對邏輯
+  // 已用真實 GAS 資料實測驗證，見交付摘要「連動引擎最終數據」。
+  // ============================================================
+
+  // 泛尾詞黑名單：單獨不構成命中（實測已知「BNI夥伴→企業減碳夥伴」
+  // 「品牌HR→品牌合作」是撞字誤配，根源都是「較短那個詞剛好是這種泛尾詞」）
+  const LINKAGE_GENERIC_WORDS = new Set(["夥伴","品牌","公司","老師","顧問"]);
+
+  // 同義字典：15 條類別，每條收窄成真同義詞（非鬆散主題群組），
+  // 避免「銀行/貸款」「地主/土地開發」這類過寬分類把全組炸成密集圖
+  // （曾經測試過寬版本：15 條字典命中 335 條、雙向互指 40 組，
+  // 明顯是硬湊而非真實語意關係，故收斂為本版 15 條、命中 148 條、雙向 14 組）
+  const LINKAGE_DICT = {
+    "保險理財": ["保險","壽險","人壽"],
+    "稅務會計": ["稅務","會計"],
+    "法律": ["律師","法律","法務"],
+    "都更危老": ["都更","危老"],
+    "廠房工廠": ["廠房","工廠","廠辦"],
+    "韓語外語教學": ["韓語","韓文","外語","華語"],
+    "留學遊學": ["留學","遊學"],
+    "旅遊觀光": ["旅遊","旅行","觀光"],
+    "醫美美容": ["醫美","美容"],
+    "餐飲加盟顧問": ["餐飲","加盟"],
+    "節能減碳ESG": ["節能","減碳","ESG","淨零","碳管理"],
+    "命理身心靈": ["生命靈數","命理","天賦諮詢","身心靈"],
+    "人力資源派遣": ["人力","派遣","招募"],
+    "包租代管": ["包租代管","二房東"],
+    "消防安全": ["消防","工安"]
+  };
+  const LINKAGE_KEYWORD_TO_CATS = {};
+  Object.keys(LINKAGE_DICT).forEach(cat => {
+    LINKAGE_DICT[cat].forEach(kw => {
+      if(!LINKAGE_KEYWORD_TO_CATS[kw]) LINKAGE_KEYWORD_TO_CATS[kw] = [];
+      LINKAGE_KEYWORD_TO_CATS[kw].push(cat);
+    });
+  });
+  const LINKAGE_ALL_KEYWORDS = Object.keys(LINKAGE_KEYWORD_TO_CATS);
+
+  // 正規化：只留中文字，跳過英數符號干擾（「BNI夥伴」→「夥伴」）
+  function linkageNorm(s){
+    return String(s == null ? "" : s).replace(/[^一-鿿]/g, "");
+  }
+
+  function linkageCatsOf(textNorm){
+    const cats = new Set();
+    LINKAGE_ALL_KEYWORDS.forEach(kw => {
+      if(textNorm.indexOf(kw) !== -1){
+        LINKAGE_KEYWORD_TO_CATS[kw].forEach(c => cats.add(c));
+      }
+    });
+    return cats;
+  }
+
+  // 直接比對：雙向 substring，較短那個詞需 ≥2 字且不是泛尾詞
+  function linkageIsDirectMatch(rn, idw){
+    if(rn.length < 2 || idw.length < 2) return false;
+    if(rn.indexOf(idw) === -1 && idw.indexOf(rn) === -1) return false;
+    const shorter = rn.length <= idw.length ? rn : idw;
+    return !LINKAGE_GENERIC_WORDS.has(shorter);
+  }
+
+  function linkageIsDictMatch(rCats, idw){
+    if(rCats.size === 0) return false;
+    const idwCats = linkageCatsOf(idw);
+    for(const c of rCats){ if(idwCats.has(c)) return true; }
+    return false;
+  }
+
+  let LINKAGE_RESULT = null;
+
+  // 計算全組連動：回傳 { perPerson, totalHits, mutualPairsCount }
+  // perPerson[id] = { mutualRows:[...], normalRows:[...] }（皆為「id 本人主動找誰」的 outbound 視角，
+  // 對應小卡格式「〈他的服務〉找 角色詞 → 對方名」；雙向互指的那一條額外進 mutualRows 置頂＋金框）
+  function computeLinkage(){
+    const ids = ROSTER.map(p => p.id).filter(id => isBuilt(id));
+    const names = {};
+    ids.forEach(id => { names[id] = PEOPLE_DATA[id].self.name; });
+
+    const identity = {};
+    ids.forEach(id => {
+      const set = new Set();
+      const d = PEOPLE_DATA[id];
+      const r = linkageNorm(d.self && d.self.role);
+      if(r) set.add(r);
+      (d.themes || []).forEach(t => {
+        const s = linkageNorm(t && t.service);
+        if(s) set.add(s);
+      });
+      identity[id] = set;
+    });
+
+    const rawHits = []; // { a, service, role, b, idw }
+    ids.forEach(a => {
+      (PEOPLE_DATA[a].themes || []).forEach(t => {
+        const svc = (t && t.service) || "";
+        (t && t.roles || []).forEach(roleText => {
+          if(!roleText || roleText.indexOf("⚠") !== -1) return;
+          const rn = linkageNorm(roleText);
+          if(rn.length < 2) return;
+          const rCats = linkageCatsOf(rn);
+          ids.forEach(b => {
+            if(b === a) return;
+            let matched = null;
+            identity[b].forEach(idw => {
+              if(matched || idw.length < 2) return;
+              if(linkageIsDirectMatch(rn, idw)) matched = idw;
+            });
+            if(!matched){
+              identity[b].forEach(idw => {
+                if(matched || idw.length < 2) return;
+                if(linkageIsDictMatch(rCats, idw)) matched = idw;
+              });
+            }
+            if(matched) rawHits.push({ a, service: svc, role: roleText.trim(), b, idw: matched });
+          });
+        });
+      });
+    });
+
+    // 雙向互指判定：a→b 與 b→a 都存在
+    const pairSet = new Set(rawHits.map(h => h.a + "|" + h.b));
+    const mutualPairKeys = new Set();
+    pairSet.forEach(key => {
+      const parts = key.split("|");
+      if(pairSet.has(parts[1] + "|" + parts[0])){
+        mutualPairKeys.add([parts[0], parts[1]].sort().join("|"));
+      }
+    });
+    function isMutual(a, b){ return mutualPairKeys.has([a, b].sort().join("|")); }
+
+    // 依「同一角色詞命中 ≥3 人」收斂：每人依 (service,role) 分組
+    const perPerson = {};
+    ids.forEach(a => {
+      const groups = new Map();
+      rawHits.filter(h => h.a === a).forEach(h => {
+        const key = h.service + "‖" + h.role;
+        if(!groups.has(key)) groups.set(key, { service: h.service, role: h.role, targets: [] });
+        groups.get(key).targets.push({ id: h.b, name: names[h.b], idw: h.idw, mutual: isMutual(a, h.b) });
+      });
+      const mutualRows = [];
+      const normalRows = [];
+      groups.forEach(g => {
+        const collapsed = g.targets.length >= 3;
+        if(!collapsed && g.targets.length === 1 && g.targets[0].mutual){
+          mutualRows.push({ service: g.service, role: g.role, targets: g.targets });
+        } else {
+          normalRows.push({ service: g.service, role: g.role, targets: g.targets, collapsed });
+        }
+      });
+      perPerson[a] = { mutualRows, normalRows };
+    });
+
+    return { perPerson, totalHits: rawHits.length, mutualPairsCount: mutualPairKeys.size };
+  }
+
+  // 冷啟（data.js）先算一版；hydrate 到手／夥伴編輯存檔後靜默重算重繪
+  function recomputeLinkage(){
+    LINKAGE_RESULT = computeLinkage();
+    GAP_RESULT = null; // 缺口用的身分集合來源跟連動引擎相同（PEOPLE_DATA），資料變了要重算
+    if(document.getElementById("page-about").style.display !== "none"){
+      renderLinkageCards();
+      renderGapSections();
+      renderProvenance();
+    }
+    if(currentId && isBuilt(currentId) && document.getElementById("page-active").style.display !== "none"){
+      renderPersonalLinkageBlock(currentId);
+    }
+  }
+
+  // 單張連動小卡（?page=about 用 14 張；個人頁「你能連動的人」重用同一份 render，隱藏重覆的姓名標頭）
+  function buildLinkageCard(id, showHeader){
+    const info = (LINKAGE_RESULT && LINKAGE_RESULT.perPerson[id]) || { mutualRows: [], normalRows: [] };
+    const card = document.createElement("div");
+    card.className = "linkage-card";
+    let html = "";
+    if(showHeader !== false){
+      const name = PEOPLE_DATA[id].self.name;
+      html += `<div class="linkage-card-head"><a href="?id=${id}" class="linkage-card-name" onclick="return navToPartner(event,'${id}')">${escapeHtml(id)}　${escapeHtml(name)}</a></div>`;
+    }
+    if(info.mutualRows.length === 0 && info.normalRows.length === 0){
+      html += `<p class="linkage-empty">目前資料還看不出明顯連動，補齊 81 宮格後會更準。</p>`;
+    }
+    info.mutualRows.forEach(row => {
+      const t = row.targets[0];
+      html += `<div class="linkage-row linkage-row-mutual"><span class="linkage-mutual-tag">⇄ 雙向</span>`
+        + `〈${escapeHtml(row.service || "本人未填主題")}〉找 <b>${escapeHtml(row.role)}</b> → `
+        + `<a href="?id=${t.id}" onclick="return navToPartner(event,'${t.id}')">${escapeHtml(t.name)}</a>（${escapeHtml(t.idw)}）</div>`;
+    });
+    info.normalRows.forEach(row => {
+      if(row.collapsed){
+        const namesHtml = row.targets.map(t => `<a href="?id=${t.id}" onclick="return navToPartner(event,'${t.id}')">${escapeHtml(t.name)}</a>`).join("、");
+        html += `<div class="linkage-row">〈${escapeHtml(row.service || "本人未填主題")}〉找 <b>${escapeHtml(row.role)}</b> → ${namesHtml}…</div>`;
+      } else {
+        row.targets.forEach(t => {
+          html += `<div class="linkage-row">〈${escapeHtml(row.service || "本人未填主題")}〉找 <b>${escapeHtml(row.role)}</b> → `
+            + `<a href="?id=${t.id}" onclick="return navToPartner(event,'${t.id}')">${escapeHtml(t.name)}</a>（${escapeHtml(t.idw)}）</div>`;
+        });
+      }
+    });
+    card.innerHTML = html;
+    return card;
+  }
+
+  function renderLinkageCards(){
+    const grid = document.getElementById("linkage-cards-grid");
+    const summary = document.getElementById("about-linkage-summary");
+    if(!grid) return;
+    grid.innerHTML = "";
+    if(!LINKAGE_RESULT){ return; }
+    summary.textContent = `共 ${LINKAGE_RESULT.totalHits} 條連動・${LINKAGE_RESULT.mutualPairsCount} 組雙向互指`;
+    ROSTER.map(p => p.id).filter(id => isBuilt(id)).sort().forEach(id => {
+      grid.appendChild(buildLinkageCard(id, true));
+    });
+  }
+
+  function renderPersonalLinkageBlock(id){
+    const headEl = document.getElementById("personal-linkage-head");
+    const blockEl = document.getElementById("personal-linkage-block");
+    if(!headEl || !blockEl) return;
+    if(!LINKAGE_RESULT){
+      headEl.style.display = "none";
+      blockEl.style.display = "none";
+      return;
+    }
+    headEl.style.display = "";
+    blockEl.style.display = "";
+    blockEl.innerHTML = "";
+    blockEl.appendChild(buildLinkageCard(id, false));
+  }
+
+  // 協作對接表（示意）：五類客戶取自簡報 P14 九宮格草稿，第三欄用連動引擎結果＋P14 推一版合理示意，
+  // 待組聚認領後才是正式版（表格上方黃色提示條已標明）
+  const ABOUT_COLLAB_TABLE = [
+    { need: "準退休收租族", detail: "買房・貸款・保險・代管",
+      owners: [["007","仲介・買房收租規劃"], ["047","人壽財務規劃"], ["026","銀行平台引薦"], ["028","包租代管"]] },
+    { need: "手上多屋的房東", detail: "出租管理・稅務・活化",
+      owners: [["023","廠房／地主資產管理"], ["047","稅務規劃"], ["028","商辦租賃"]] },
+    { need: "改建／都更投資人", detail: "案源・合資・評估・工程",
+      owners: [["050","都更宅整合協助"], ["025","建案代銷／案源開發"], ["003","節能減碳 ESCO 工程"], ["031","都更潛力物件投資"]] },
+    { need: "首購／換屋家庭", detail: "買屋・裝修・家電・收納",
+      owners: [["007","仲介・室內設計｜老宅翻修"], ["055","仲介經紀（大新竹）"], ["031","家電 B2B／收納整理諮詢"]] },
+    { need: "中小企業主", detail: "廠辦・人力・團險・節能",
+      owners: [["023","廠房資產管理"], ["005","人力派遣"], ["047","團險／職災"], ["003","節能減碳顧問"]] }
+  ];
+
+  function renderCollabTable(){
+    const tbody = document.getElementById("about-collab-tbody");
+    if(!tbody) return;
+    tbody.innerHTML = "";
+    ABOUT_COLLAB_TABLE.forEach(row => {
+      const tr = document.createElement("tr");
+      const ownersHtml = row.owners.map(o => {
+        const [id, tag] = o;
+        const built = isBuilt(id);
+        const name = built ? PEOPLE_DATA[id].self.name : (ROSTER.find(p => p.id === id) || {}).name || id;
+        return `<a href="?id=${id}" onclick="return navToPartner(event,'${id}')">${escapeHtml(name)}</a>（${escapeHtml(tag)}）`;
+      }).join("、");
+      tr.innerHTML = `<td>${escapeHtml(row.need)}</td><td>${escapeHtml(row.detail)}</td><td>${ownersHtml}</td>`;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ============================================================
+  // 2026-07-21：「這條鏈還缺誰」缺口偵測（?page=about 新增區塊）
+  // 設計：與「誰跟誰能連動」引擎共用 linkageNorm/LINKAGE_DICT/linkageIsDirectMatch/linkageIsDictMatch
+  // （不新增、不修改 LINKAGE_DICT，主連動區塊數字不受影響），但覆蓋判定用的「身分集合」多一層過濾——
+  // 服務名稱含「媒合／引薦／轉介」字樣的不算本人親自承作身分，GAP 覆蓋判定不算數（連動判定仍算，不影響主引擎）。
+  // 根源案例：026 楊之慧「銀行平台引薦」、025 王佳筠「房屋貸款媒合」都不是貸款窗口本人，
+  // 若直接沿用連動引擎的身分集合，「貸款／房貸窗口」會被誤判成組內已覆蓋，見交付摘要「④貸款窗口判準」。
+  // ============================================================
+
+  const GAP_REFERRAL_MARKERS = ["媒合","引薦","轉介"];
+  function isGapReferralService(serviceText){
+    return GAP_REFERRAL_MARKERS.some(m => (serviceText || "").indexOf(m) !== -1);
+  }
+
+  // 缺口聚類字典：只收「同一件事的不同說法」真同義詞（比照 LINKAGE_DICT 的既有教訓，
+  // 見「技術筆記/踩坑速查」同義字典鬆散主題群踩坑），沒收進來的角色詞保留原文自己當一組，不硬湊聚類。
+  const GAP_CLUSTER_DICT = {
+    "貸款／房貸窗口": ["貸款","房貸"],
+    "代書／地政士": ["代書","地政士"],
+    "水電師傅／水電工班": ["水電"],
+    "律師": ["律師"],
+    "估價師": ["估價師"],
+    "建商／建設公司": ["建商","建設公司"],
+    "建築師": ["建築師"]
+  };
+  function gapClusterLabelOf(rn){
+    for(const label of Object.keys(GAP_CLUSTER_DICT)){
+      if(GAP_CLUSTER_DICT[label].some(kw => rn.indexOf(kw) !== -1)) return label;
+    }
+    return null;
+  }
+
+  // 人工排除的已知假陽性：「房屋仲介」字面比對抓不到「仲介經紀人」身分詞（字序不同、非 substring），
+  // 但 E 組本身就有 3 位仲介經紀人（007/028/055），不是真缺口，排除不進清單。
+  const GAP_EXCLUDE_LABELS = new Set(["房屋仲介"]);
+
+  // 分會白金名冊（57 人，此處只列非現役 E 組的 43 人）＋ PowerTeam 產業鏈分組（A–D，複選自選意願）
+  // 來源：Joan/工作/BNI-華都更分會/BNI華都更分會白金名冊.md（2026-07-10 版）
+  //       窩的家/管理部/BNI/華都更分會/PowerTeam產業鏈分組.md（2026-07-03 版）
+  // 靜態快照（分會沒有結構化 API 可即時讀取），供「分會其他組有人做」比對用，過期需人工更新。
+  const BRANCH_ROSTER = [
+    ["王常殷Hubert","都更危老建設-新竹地區",["A"]],
+    ["藍堂嘉","包租代管平台",["B","C"]],
+    ["陳向柔Naomi","商業空間室內設計-新竹以北",["C","D"]],
+    ["周以仁","仲介經紀人-台北市大安區",["A"]],
+    ["高翊書Eason","都更危老建設-台北市信義區",["A"]],
+    ["王寶佳Renee","置產投資客-台北市萬華區",["A"]],
+    ["王春雄Jayson","理財規劃顧問-雙北",["C"]],
+    ["陳靖薇","包租代管-台北市內湖、松山區",["B","D"]],
+    ["蘇瓜雅","財務管理-不動產聯合開發-台北市",["A"]],
+    ["施宜妏","金融業-法務顧問",["A","C"]],
+    ["莊大永","地主召集人-台東市-自主更新",["A","C"]],
+    ["莊涵勝","仲介經紀人-台北市信義區",["A"]],
+    ["黃冠霖","證券交易系統-軟體工程師",["A","D"]],
+    ["諸紀平","住宅室內設計裝修-台北市",["A"]],
+    ["陳秒螢Emma","房屋貸款-新竹以北",["A","B"]],
+    ["李艾莉Aili","工業蒸氣熱能系統",["A"]],
+    ["莊慧劍","置產投資客-台北市信義、南港區",["A"]],
+    ["吳翊辰","地政士-中彰投雲嘉南",["A","C"]],
+    ["黃郁婷","金融業-財務",["A","B"]],
+    ["蔡明璋","合法隔套置產投資-台北市大安、中正區",["A"]],
+    ["陳黎玲Jossie","會展空間裝修設計-新竹以北",["D"]],
+    ["林媜媁Wei","資通訊業-財務分析師",["A","B"]],
+    ["柳慧燕","危老都更推動建築師-台北市",["A"]],
+    ["張瑜晏","不動產估價與鑑定-雙北、桃園",["A"]],
+    ["陳昭男","都更土地開發-台北市",["A"]],
+    ["包育翎","地主召集人-高雄市鳳山區",["A","B"]],
+    ["蔡岱達","磁磚經銷商-台中以北",["A","D"]],
+    ["蔡淯思Mina","ERP專案管理",["D"]],
+    ["詹媛婷","房貸減壓-台北市",["C"]],
+    ["王雅慧Peggy","置產投資客-台北市中山、大同區",["A"]],
+    ["何俊彥","老屋翻新包租代管-台北市",["B","C"]],
+    ["周育慈Anna","包租代管-台北市大安區",["B","C"]],
+    ["鍾智媛Fiona","商務中心-台北市大安、中山區",["B","D"]],
+    ["黃建嘉","仲介經紀人-台北市大同區",[]],
+    ["林中群","鋼結構防蝕工程",["A","B"]],
+    ["林晏伃","都更長照建築師-台北市",["C"]],
+    ["李瑞雲Grace","置產投資客-台北市松山區",["A","B"]],
+    ["楊淑媛","地主召集人-台北市士林區",["A","C"]],
+    ["張怡蘋April","工程顧問",["A"]],
+    ["張耕豪","大板磚工程-連工帶料",["B","D"]],
+    ["陳品攸","商業法律顧問",["C"]],
+    ["沈瑞婷","智慧物流導入顧問",[]],
+    ["古育瑋","廠房建築師與營造-桃竹苗",[]]
+  ];
+
+  // 缺口→名冊比對關鍵字：刻意比聚類字典嚴格。「結構技師」「軟件廠商」字面上能撞到
+  // 林中群「鋼結構防蝕工程」／黃冠霖「證券交易系統-軟體工程師」，但前者是防蝕施作不是結構技師執照、
+  // 後者是個人證券系統工程師、非軟體「廠商」也不對口 E 組情境，人工判定不算命中，關鍵字刻意不收，
+  // 兩者留在第2層（見交付摘要「處理方式」）。沒列在這裡的標籤一律落第2層。
+  const GAP_ROSTER_KEYWORDS = {
+    "貸款／房貸窗口": ["貸款","房貸"],
+    "代書／地政士": ["代書","地政士"],
+    "律師": ["律師","法律","法務"],
+    "建商／建設公司": ["建商","建設"],
+    "估價師": ["估價"],
+    "建築師": ["建築師"],
+    "裝潢公司": ["裝潢","裝修"],
+    "土地開發": ["土地開發","土地整合"]
+  };
+  function findRosterMatches(label){
+    const kws = GAP_ROSTER_KEYWORDS[label];
+    if(!kws) return [];
+    return BRANCH_ROSTER.filter(([, profession]) => kws.some(kw => profession.indexOf(kw) !== -1));
+  }
+
+  function computeGaps(){
+    const ids = ROSTER.map(p => p.id).filter(id => isBuilt(id));
+
+    // GAP 專用身分集合：self.role 一定算，theme.service 排除含媒合/引薦/轉介字樣者
+    const gapIdentity = {};
+    ids.forEach(id => {
+      const d = PEOPLE_DATA[id];
+      const set = new Set();
+      const r = linkageNorm(d.self && d.self.role);
+      if(r) set.add(r);
+      (d.themes || []).forEach(t => {
+        if(!t || isGapReferralService(t.service)) return;
+        const s = linkageNorm(t.service);
+        if(s) set.add(s);
+      });
+      gapIdentity[id] = set;
+    });
+
+    function isCoveredByGroup(rn, a){
+      const rCats = linkageCatsOf(rn);
+      for(const b of ids){
+        if(b === a) continue; // 找的是別人，排除自己跟自己比對
+        for(const idw of gapIdentity[b]){
+          if(idw.length < 2) continue;
+          if(linkageIsDirectMatch(rn, idw)) return true;
+          if(linkageIsDictMatch(rCats, idw)) return true;
+        }
+      }
+      return false;
+    }
+
+    // 掃描 14 人的 roles[]，找組內完全無人命中的角色詞（沿用連動引擎的空格／⚠ 過濾規則）
+    const clusters = new Map(); // label -> Set(person id)
+    ids.forEach(a => {
+      (PEOPLE_DATA[a].themes || []).forEach(t => {
+        (t && t.roles || []).forEach(roleText => {
+          if(!roleText || roleText.indexOf("⚠") !== -1) return;
+          const rn = linkageNorm(roleText);
+          if(rn.length < 2) return;
+          if(LINKAGE_GENERIC_WORDS.has(rn)) return; // 裸泛詞不成立標籤（如「老師」）
+          if(GAP_EXCLUDE_LABELS.has(rn)) return;
+          if(isCoveredByGroup(rn, a)) return;
+          const label = gapClusterLabelOf(rn) || rn;
+          if(GAP_EXCLUDE_LABELS.has(label)) return;
+          if(!clusters.has(label)) clusters.set(label, new Set());
+          clusters.get(label).add(a);
+        });
+      });
+    });
+
+    const GAP_THRESHOLD = 2; // 至少 2 人的格子指到才列，單人長尾收合不顯示（理由見交付摘要）
+    const rows = [...clusters.entries()]
+      .map(([label, people]) => ({ label, peopleCount: people.size }))
+      .filter(r => r.peopleCount >= GAP_THRESHOLD)
+      .sort((a,b) => b.peopleCount - a.peopleCount);
+
+    const l1 = [];
+    const l2 = [];
+    rows.forEach(r => {
+      const matches = findRosterMatches(r.label);
+      if(matches.length){
+        l1.push({ label: r.label, peopleCount: r.peopleCount, matches });
+      } else {
+        l2.push({ label: r.label, peopleCount: r.peopleCount });
+      }
+    });
+
+    return { l1, l2 };
+  }
+
+  let GAP_RESULT = null;
+
+  function renderGapSections(){
+    const l1Grid = document.getElementById("gap-l1-grid");
+    const l2Grid = document.getElementById("gap-l2-grid");
+    const summary = document.getElementById("about-gap-summary");
+    if(!l1Grid || !l2Grid) return;
+    if(!GAP_RESULT) GAP_RESULT = computeGaps();
+
+    summary.textContent = `共 ${GAP_RESULT.l1.length + GAP_RESULT.l2.length} 個缺口・第1層可跨組借將 ${GAP_RESULT.l1.length} 個・第2層待招募 ${GAP_RESULT.l2.length} 個`;
+
+    l1Grid.innerHTML = "";
+    GAP_RESULT.l1.forEach(g => {
+      const card = document.createElement("div");
+      card.className = "gap-card";
+      const peopleHtml = g.matches.map(([name, profession, groups]) => {
+        const badges = (groups || []).map(gr => `<span class="gap-group-badge">${escapeHtml(gr)}組</span>`).join("");
+        return `<div class="gap-person-row">${badges}<span>${escapeHtml(name)}（${escapeHtml(profession)}）</span></div>`;
+      }).join("");
+      card.innerHTML = `<p class="gap-card-role">${escapeHtml(g.label)}<span class="gap-card-heat">被 ${g.peopleCount} 人指到</span></p>${peopleHtml}`;
+      l1Grid.appendChild(card);
+    });
+
+    l2Grid.innerHTML = "";
+    GAP_RESULT.l2.forEach(g => {
+      const card = document.createElement("div");
+      card.className = "gap-card gap-card-l2";
+      card.innerHTML = `<p class="gap-card-role">${escapeHtml(g.label)}<span class="gap-card-heat">被 ${g.peopleCount} 人指到</span></p><p class="gap-card-l2-note">全分會白金名冊查無相符專業別，需對外招募</p>`;
+      l2Grid.appendChild(card);
+    });
+  }
+
+  let latestUpdatedAt = null;
+
+  function renderProvenance(){
+    const el = document.getElementById("about-provenance");
+    if(!el) return;
+    el.textContent = latestUpdatedAt
+      ? `本頁連動關係由 14 位夥伴自行維護的九宮格資料即時計算生成・資料更新於 ${latestUpdatedAt}`
+      : "本頁連動關係由 14 位夥伴自行維護的九宮格資料即時計算生成・即時生成";
+  }
+
+  // 點連動小卡／對接表裡的人名 → 走既有 selectPartner()（單頁路由），不整頁重載
+  function navToPartner(e, id){
+    if(e) e.preventDefault();
+    selectPartner(id);
+    return false;
+  }
+
+  function renderAboutPage(){
+    renderLinkageCards();
+    renderCollabTable();
+    renderGapSections();
+    renderProvenance();
+  }
+
+  function showAboutPage(){
+    document.getElementById("page-active").style.display = "none";
+    document.getElementById("page-placeholder").style.display = "none";
+    document.getElementById("page-about").style.display = "";
+    currentId = null;
+    document.querySelectorAll(".roster-item").forEach(el => el.classList.remove("active"));
+    renderAboutPage();
+  }
+
+  function goToAboutPage(e){
+    if(e) e.preventDefault();
+    showAboutPage();
+    const url = new URL(window.location.href);
+    url.searchParams.set("page", "about");
+    url.searchParams.delete("id");
+    window.history.replaceState({}, "", url); // 沿用既有路由風格（selectPartner 也用 replaceState，不堆歷史）
+    closeRoster();
+    window.scrollTo({ top:0, behavior:"instant" in window ? "instant" : "auto" });
+    return false;
   }
 
   // dualTeam 字串「D組・商用不動產升級鏈」取最前的組別字母（D）做列表短 badge
@@ -2751,6 +3637,7 @@
     currentThemeIdx = null;
     renderDesktop();
     renderMobile();
+    renderPersonalLinkageBlock(id);
   }
 
   function selectPartner(id){
@@ -2759,6 +3646,7 @@
 
     const pageActive = document.getElementById("page-active");
     const pagePlaceholder = document.getElementById("page-placeholder");
+    document.getElementById("page-about").style.display = "none"; // 從 ?page=about 點人名切回個人頁
     const built = isBuilt(id);
 
     if(built){
@@ -2768,6 +3656,7 @@
       // 網址參數同步，讓 ?id=NNN 可直開此人
       const url = new URL(window.location.href);
       url.searchParams.set("id", id);
+      url.searchParams.delete("page");
       window.history.replaceState({}, "", url);
     } else {
       pageActive.style.display = "none";
@@ -2787,6 +3676,7 @@
 
       const url = new URL(window.location.href);
       url.searchParams.set("id", id);
+      url.searchParams.delete("page");
       window.history.replaceState({}, "", url);
     }
 
@@ -2842,14 +3732,53 @@
     document.getElementById("roster-toggle").setAttribute("aria-expanded", "false");
   }
 
+  // ===== 全站字級縮放（右下角 −/＋ 控件）=====
+  // 對 body 套 CSS zoom（Chrome/Edge/Safari 支援，本站受眾夠用；不支援的瀏覽器控件仍在但無效果，不影響其餘功能）。
+  // localStorage 記憶，範圍 0.8–1.5、step 0.1；到邊界對應按鈕變灰。
+  const ZOOM_KEY = "e-grid-zoom";
+  const ZOOM_MIN = 0.8, ZOOM_MAX = 1.5, ZOOM_STEP = 0.1;
+  let currentZoom = 1;
+
+  function loadZoom(){
+    const saved = parseFloat(localStorage.getItem(ZOOM_KEY));
+    return (!isNaN(saved) && saved >= ZOOM_MIN && saved <= ZOOM_MAX) ? saved : 1;
+  }
+
+  function applyZoom(z){
+    currentZoom = Math.round(z * 10) / 10; // 消 0.1 累加的浮點誤差
+    document.body.style.zoom = currentZoom;
+    localStorage.setItem(ZOOM_KEY, String(currentZoom));
+
+    const label = document.getElementById("zoom-label");
+    const pct = Math.round(currentZoom * 100);
+    label.textContent = pct + "%";
+    label.classList.toggle("show", currentZoom !== 1);
+
+    document.getElementById("zoom-out-btn").disabled = currentZoom <= ZOOM_MIN;
+    document.getElementById("zoom-in-btn").disabled = currentZoom >= ZOOM_MAX;
+  }
+
+  function adjustZoom(delta){
+    applyZoom(Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, currentZoom + delta)));
+  }
+
   // ===== 初始化：讀 URL ?id=NNN 決定初始顯示誰 =====
   // 三種情況：現役名單 → 正常開該人；已退出名單（DEPARTED_ROSTER）→ 友善提示，不 fallback 不 404；
   // 其餘無效/未帶參數 → 預設 007
   function initApp(){
     const url = new URL(window.location.href);
     const requestedId = url.searchParams.get("id");
+    const requestedPage = url.searchParams.get("page");
 
+    applyZoom(loadZoom());
     renderRoster();
+    recomputeLinkage(); // 冷啟先用 data.js 算一版（連動小卡／個人頁回連都吃得到）
+
+    if(requestedPage === "about"){
+      showAboutPage();
+      hydrateFromBackend();
+      return;
+    }
 
     if(requestedId && Object.prototype.hasOwnProperty.call(DEPARTED_ROSTER, requestedId)){
       showDepartedNotice(requestedId);

@@ -65,7 +65,7 @@ const PEOPLE_DATA = {
   },
 
   "007": {
-    self: { name:"張瓊安", en:"Joan", role:"仲介經紀人", area:"三重・蘆洲・新莊" },
+    self: { name:"張瓊安", en:"", role:"仲介經紀人", area:"三重・蘆洲・新莊" },
     photo: "images/007.jpg",
     leader: true,
     themes: [
