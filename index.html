@@ -585,6 +585,35 @@
     font-size:14.5px;
   }
 
+  /* ================= 投影模式（2026-07-21 Joan 開會投影需求）=================
+     收側欄、九宮格撐滿全螢幕寬、字級再放大一級；僅桌機生效，手機不受影響 */
+  @media (min-width:768px){
+    /* 側欄收成抽屜（沿用手機機制）：投影中按左上漢堡鈕可叫出名單換人 */
+    body.projection-mode .roster-sidebar{
+      transform:translateX(-100%);
+      transition:transform 260ms var(--ease-in-out);
+      box-shadow:0 0 24px rgba(0,0,0,0.18);
+    }
+    body.projection-mode .roster-sidebar.open{transform:translateX(0);}
+    body.projection-mode .roster-toggle{display:flex;}
+    body.projection-mode .roster-backdrop.open{display:block;}
+    body.projection-mode .content-area{margin-left:0;}
+    body.projection-mode .wrap{max-width:none; padding:0 24px 64px;}
+
+    body.projection-mode .micro-cell{font-size:17px;}
+    body.projection-mode .macro-center .micro-cell.theme-preview{font-size:17px;}
+    body.projection-mode .macro-theme .micro-cell.theme-center{font-size:17.5px;}
+    body.projection-mode .macro-theme .micro-cell.role-cell{font-size:17px;}
+    body.projection-mode .two-line .cell-service{font-size:17px;}
+    body.projection-mode .two-line .cell-ta{font-size:14.5px;}
+    body.projection-mode .two-line .cell-ta.empty{font-size:13px;}
+    body.projection-mode .two-line .cell-rank{font-size:12px; width:20px; height:20px;}
+    body.projection-mode .macro-center .micro-cell.self{font-size:17px;}
+    body.projection-mode .macro-center .micro-cell.self .self-name{font-size:22px;}
+    body.projection-mode .macro-center .micro-cell.self .self-sub{font-size:15px;}
+    body.projection-mode .mandala-desktop.compact-mode .two-line .cell-service{font-size:19px;}
+  }
+
   /* ---- mobile 3x3 + 子宮格 drill-down ---- */
 
   .mandala-mobile{
@@ -1467,6 +1496,9 @@
 
   <!-- 桌機版：精簡／完整切換（v4 § 11.3，只影響兩行格的 TA 行顯示） -->
   <div class="mode-toggle-row">
+    <div class="mode-toggle" style="margin-right:8px;">
+      <button type="button" id="projection-btn" aria-pressed="false" onclick="toggleProjection()">🖥 投影</button>
+    </div>
     <div class="mode-toggle" role="group" aria-label="服務／TA 顯示模式">
       <button type="button" id="mode-full-btn" class="active" aria-pressed="true" onclick="setGridMode(false)">完整</button>
       <button type="button" id="mode-compact-btn" aria-pressed="false" onclick="setGridMode(true)">精簡</button>
@@ -1692,6 +1724,14 @@
     document.getElementById("mode-compact-btn").classList.toggle("active", compact);
     document.getElementById("mode-compact-btn").setAttribute("aria-pressed", String(compact));
     renderDesktop();
+  }
+
+  // 投影模式（2026-07-21）：收側欄＋九宮格全寬＋字級放大，開會投影用
+  function toggleProjection(){
+    const on = document.body.classList.toggle("projection-mode");
+    const btn = document.getElementById("projection-btn");
+    btn.classList.toggle("active", on);
+    btn.setAttribute("aria-pressed", String(on));
   }
 
   // ===== 目前顯示中的人 =====
