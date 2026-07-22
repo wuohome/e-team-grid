@@ -1651,6 +1651,8 @@
     display:grid;
     grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
     gap:14px;
+    align-items:start; /* 2026-07-22 修正：CSS Grid 預設 stretch 會讓同列卡片跟著展開卡片被拉高，
+                           鄰卡出現大片空白（§ 13.7 硬傷 1）。start 讓每張卡維持自己的內容高度。 */
   }
 
   /* 2026-07-22：people-card 改 <details> 原生 accordion，about 頁 14 張預設收合。
@@ -1700,12 +1702,20 @@
     text-decoration:none;
   }
 
-  .linkage-card-name:hover{color:var(--red);}
+  .linkage-card-name:hover{color:var(--gold-deep);}
+
+  /* 2026-07-22 新增：摺疊標頭補職業，訪客不展開也看得出「這人是做什麼的」（§ 13.7 摺疊態是空殼） */
+  .linkage-card-role{
+    font-size:13px;
+    color:var(--ink-soft);
+    font-weight:500;
+  }
 
   .linkage-card-meta{
-    font-size:12px;
+    font-size:11px;
     color:var(--ink-soft);
-    font-weight:600;
+    font-weight:500;
+    margin-left:auto; /* 2026-07-22：「N條連動」降視覺份量——縮小字級/降字重/推到行尾次要位置 */
   }
 
   /* 「最常被需要 Top 3」摘要條 */
@@ -1757,27 +1767,22 @@
 
   .linkage-row:first-of-type{border-top:none;}
 
-  .linkage-row a{color:var(--red); text-decoration:none; font-weight:700;}
+  .linkage-row a{color:var(--gold-deep); text-decoration:none; font-weight:700;}
   .linkage-row a:hover{text-decoration:underline;}
   .linkage-row b{color:var(--ink); font-weight:700;}
 
+  /* 2026-07-22 統一列版式（§ 13.7 硬傷）：雙向與單向共用同一種列版型，
+     不再另外套金框大 pill——同一張卡展開後雙向理由多筆時，重複的框會很干擾。
+     雙向只靠 .linkage-mutual-tag 一個小圖示標示，見下方。 */
   .linkage-row-mutual{
-    background:#FDF8EC;
-    border:1px solid var(--gold);
-    border-top:1px solid var(--gold) !important;
-    border-radius:8px;
-    padding:8px 10px;
-    margin-bottom:4px;
+    border-top:1px solid var(--border-hair) !important;
   }
 
   .linkage-mutual-tag{
     display:inline-block;
-    margin-right:6px;
-    padding:1px 8px;
-    border-radius:999px;
-    background:var(--gold);
-    color:#3A2C0E;
-    font-size:11px;
+    margin-right:4px;
+    color:var(--gold-deep);
+    font-size:12.5px;
     font-weight:800;
   }
 
@@ -1833,7 +1838,7 @@
     white-space:nowrap;
   }
 
-  .about-collab-table a{color:var(--red); text-decoration:none; font-weight:700;}
+  .about-collab-table a{color:var(--gold-deep); text-decoration:none; font-weight:700;}
   .about-collab-table a:hover{text-decoration:underline;}
 
   /* 2026-07-21：「這條鏈還缺誰」缺口區塊 */
@@ -1915,7 +1920,17 @@
     margin:0;
   }
 
-  #personal-linkage-block .linkage-card{margin-top:0;}
+  /* 2026-07-22：個人頁回連卡片改窄雙欄（§ 13.7 項 7），跟 about 頁 .linkage-cards-grid 同一種
+     auto-fit/minmax 語彙——比全寬單欄空框更緊湊，一致視覺語言 */
+  #personal-linkage-block{max-width:640px;}
+  #personal-linkage-block .linkage-card{
+    margin-top:0;
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));
+    align-items:start;
+    gap:2px 24px;
+  }
+  #personal-linkage-block .linkage-empty{grid-column:1 / -1;}
 
   /* ================= responsive ================= */
 
@@ -1954,6 +1969,7 @@
     .content-area{padding-top:8px;}
     .partner-card{margin-top:56px;}
     .placeholder-page{margin-top:56px;}
+    #page-about{margin-top:56px;} /* 2026-07-22：比照 partner-card/placeholder-page，讓出漢堡鈕淨空（§ 13.7 項 8） */
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -2107,13 +2123,7 @@
       <p>用分會的話說：「我們不是一個群組。我們是一個事業體。」</p>
     </div>
 
-    <div class="section-head">
-      <h2>誰跟誰能連動</h2>
-      <span class="section-note" id="about-linkage-summary"></span>
-    </div>
-    <div class="linkage-top3" id="linkage-top3"></div>
-    <div class="linkage-cards-grid" id="linkage-cards-grid"></div>
-
+    <!-- 2026-07-22：協作對接表搬到連動區上方（§ 13.7 項 3）——它才是真正回答「我該找誰」的內容 -->
     <div class="section-head">
       <h2>協作對接表</h2>
       <span class="section-note">示意版，資料取自簡報 P14 五類服務對象</span>
@@ -2127,6 +2137,13 @@
         <tbody id="about-collab-tbody"></tbody>
       </table>
     </div>
+
+    <div class="section-head">
+      <h2>誰跟誰能連動</h2>
+      <span class="section-note" id="about-linkage-summary"></span>
+    </div>
+    <div class="linkage-top3" id="linkage-top3"></div>
+    <div class="linkage-cards-grid" id="linkage-cards-grid"></div>
 
     <div class="section-head">
       <h2>這條鏈還缺誰</h2>
@@ -3308,7 +3325,7 @@
   function buildLinkageTargetRow(row){
     const reasonsHtml = row.reasons.map(r => escapeHtml(r)).join("、");
     const countNote = row.reasons.length >= 2 ? `；共 ${row.reasons.length} 項` : "";
-    const mutualTag = row.mutual ? `<span class="linkage-mutual-tag">⇄ 雙向</span>` : "";
+    const mutualTag = row.mutual ? `<span class="linkage-mutual-tag" title="雙向連動">⇄</span>` : ""; // 2026-07-22：改小圖示，不再用大 pill（§ 13.7）
     return `<div class="linkage-row${row.mutual ? " linkage-row-mutual" : ""}">${mutualTag}`
       + `→ <a href="?id=${row.id}" onclick="return navToPartner(event,'${row.id}')">${escapeHtml(row.name)}</a>`
       + `（${reasonsHtml}${countNote}）</div>`;
@@ -3335,6 +3352,7 @@
     }
 
     const name = PEOPLE_DATA[id].self.name;
+    const role = (PEOPLE_DATA[id].self.role || "").trim(); // 2026-07-22：摺疊標頭補職業，見 .linkage-card-role
     const mutualCount = info.mutualRows.length;
     const metaText = `${info.outboundCount} 條連動` + (mutualCount > 0 ? `・⇄${mutualCount} 組雙向` : "");
     const card = document.createElement("details");
@@ -3343,6 +3361,7 @@
     card.innerHTML = `<summary class="linkage-card-head">`
       + `<span class="linkage-caret">▸</span>`
       + `<a href="?id=${id}" class="linkage-card-name" onclick="return navToPartner(event,'${id}')">${escapeHtml(id)}　${escapeHtml(name)}</a>`
+      + (role ? `<span class="linkage-card-role">${escapeHtml(role)}</span>` : "")
       + `<span class="linkage-card-meta">${escapeHtml(metaText)}</span>`
       + `</summary><div class="linkage-card-body">${bodyHtml}</div>`;
     return card;
