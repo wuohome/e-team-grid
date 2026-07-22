@@ -1718,45 +1718,6 @@
     margin-left:auto; /* 2026-07-22：「N條連動」降視覺份量——縮小字級/降字重/推到行尾次要位置 */
   }
 
-  /* 「最常被需要 Top 3」摘要條 */
-  .linkage-top3{
-    display:flex;
-    flex-wrap:wrap;
-    align-items:center;
-    gap:8px 20px;
-    background:#FDF8EC;
-    border:1px solid var(--gold);
-    border-radius:12px;
-    padding:12px 16px;
-    margin-bottom:14px;
-    font-size:13px;
-  }
-  .linkage-top3:empty{display:none;}
-  .linkage-top3-label{
-    font-weight:800;
-    color:var(--gold-deep);
-  }
-  .linkage-top3-item{
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-  }
-  .linkage-top3-rank{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    width:18px;
-    height:18px;
-    border-radius:50%;
-    background:var(--gold);
-    color:#3A2C0E;
-    font-size:11px;
-    font-weight:800;
-  }
-  .linkage-top3-item a{color:var(--red); font-weight:700; text-decoration:none;}
-  .linkage-top3-item a:hover{text-decoration:underline;}
-  .linkage-top3-stat{color:var(--ink-soft); font-size:12px;}
-
   .linkage-row{
     font-size:12.5px;
     line-height:1.65;
@@ -1840,6 +1801,20 @@
 
   .about-collab-table a{color:var(--gold-deep); text-decoration:none; font-weight:700;}
   .about-collab-table a:hover{text-decoration:underline;}
+
+  /* 2026-07-22：原「最常被需要 Top 3」排行榜拿掉排名/數字，併入對接表下方一行平等並列敘述
+     （Joan 拍板，理由見 § 13.7 fable 意見：14 人小群組公開排名易讓連動數少的夥伴顯得「不太被需要」，
+     跟 BNI 互惠精神有點衝突）。純文字說明列，不用金框/名次角標等排行視覺語彙。 */
+  .about-collab-common{
+    font-size:12.5px;
+    line-height:1.7;
+    color:var(--ink-soft);
+    margin:10px 0 0;
+  }
+  .about-collab-common:empty{display:none;}
+  .about-collab-common b{color:var(--ink);}
+  .about-collab-common a{color:var(--gold-deep); text-decoration:none; font-weight:700;}
+  .about-collab-common a:hover{text-decoration:underline;}
 
   /* 2026-07-21：「這條鏈還缺誰」缺口區塊 */
   .gap-subhead{
@@ -2137,12 +2112,12 @@
         <tbody id="about-collab-tbody"></tbody>
       </table>
     </div>
+    <p class="about-collab-common" id="about-collab-common"></p>
 
     <div class="section-head">
       <h2>誰跟誰能連動</h2>
       <span class="section-note" id="about-linkage-summary"></span>
     </div>
-    <div class="linkage-top3" id="linkage-top3"></div>
     <div class="linkage-cards-grid" id="linkage-cards-grid"></div>
 
     <div class="section-head">
@@ -3213,7 +3188,8 @@
   // 計算全組連動：回傳 { perPerson, totalHits, mutualPairsCount, inboundRanking }
   // perPerson[id] = { mutualRows:[...], normalRows:[...], outboundCount }（皆為「id 本人主動找誰」的 outbound 視角，
   // 依「目標人」聚合成一行，reasons[] 收該人被找的所有理由；雙向互指的那一列進 mutualRows 置頂＋金框）
-  // inboundRanking = 全員「被找」排行（inbound 視角，供 Top3 摘要用，見下方 renderLinkageTop3）
+  // inboundRanking = 全員「被找」內部計算（inbound 視角），供 renderCollabCommonContacts() 篩選「跨多類需求的共通服務窗口」用；
+  // 2026-07-22 起呈現層不再顯示名次/數字（原「最常被需要 Top 3」排行榜已拿掉，見該函式上方註解）
   function computeLinkage(){
     const ids = ROSTER.map(p => p.id).filter(id => isBuilt(id));
     const names = {};
@@ -3313,6 +3289,7 @@
     GAP_RESULT = null; // 缺口用的身分集合來源跟連動引擎相同（PEOPLE_DATA），資料變了要重算
     if(document.getElementById("page-about").style.display !== "none"){
       renderLinkageCards();
+      renderCollabCommonContacts(); // 依賴 LINKAGE_RESULT.inboundRanking，hydrate/存檔後需跟著重繪
       renderGapSections();
       renderProvenance();
     }
@@ -3367,23 +3344,6 @@
     return card;
   }
 
-  // 頂部「最常被需要 Top 3」摘要：取 inboundRanking 前 3（sourceCount>0），純前端 render，複用同一份計算結果
-  function renderLinkageTop3(){
-    const box = document.getElementById("linkage-top3");
-    if(!box) return;
-    if(!LINKAGE_RESULT || !LINKAGE_RESULT.inboundRanking){ box.innerHTML = ""; return; }
-    const top3 = LINKAGE_RESULT.inboundRanking.filter(r => r.sourceCount > 0).slice(0, 3);
-    if(top3.length === 0){ box.innerHTML = ""; return; }
-    const itemsHtml = top3.map((r, i) => {
-      return `<span class="linkage-top3-item">`
-        + `<span class="linkage-top3-rank">${i + 1}</span>`
-        + `<a href="?id=${r.id}" onclick="return navToPartner(event,'${r.id}')">${escapeHtml(r.name)}</a>`
-        + `<span class="linkage-top3-stat">（${r.sourceCount} 人會找・${r.hitCount} 條連動）</span>`
-        + `</span>`;
-    }).join("");
-    box.innerHTML = `<span class="linkage-top3-label">🔥 最常被需要</span>${itemsHtml}`;
-  }
-
   function renderLinkageCards(){
     const grid = document.getElementById("linkage-cards-grid");
     const summary = document.getElementById("about-linkage-summary");
@@ -3394,7 +3354,6 @@
     grid.innerHTML = "";
     if(!LINKAGE_RESULT){ return; }
     summary.textContent = `共 ${LINKAGE_RESULT.totalHits} 條連動・${LINKAGE_RESULT.mutualPairsCount} 組雙向互指`;
-    renderLinkageTop3();
     ROSTER.map(p => p.id).filter(id => isBuilt(id)).sort().forEach(id => {
       const card = buildLinkageCard(id, true);
       if(openIds.has(id)) card.setAttribute("open", "");
@@ -3447,6 +3406,28 @@
       tr.innerHTML = `<td>${escapeHtml(row.need)}</td><td>${escapeHtml(row.detail)}</td><td>${ownersHtml}</td>`;
       tbody.appendChild(tr);
     });
+  }
+
+  // 2026-07-22：原「最常被需要 Top 3」排行榜（金框＋①②③名次＋N人會找/M條連動）拿掉排名呈現，
+  // 併進協作對接表下方一行平等並列敘述（Joan 拍板，理由見 vault PRD § 13.7 fable 意見：
+  // 14 人小群組公開排名容易讓連動數少的夥伴顯得「不太被需要」，跟 BNI 互惠精神有點衝突）。
+  // computeLinkage() 的 inboundRanking 內部計算保留（sourceCount 仍用來篩選「誰算共通窗口」），
+  // 但呈現層完全不顯示名次/人數/條數，只列人名＋職業別，順序改按編號排序（不是排名順序）。
+  function renderCollabCommonContacts(){
+    const el = document.getElementById("about-collab-common");
+    if(!el) return;
+    if(!LINKAGE_RESULT || !LINKAGE_RESULT.inboundRanking){ el.innerHTML = ""; return; }
+    const common = LINKAGE_RESULT.inboundRanking
+      .filter(r => r.sourceCount > 0)
+      .slice(0, 3)
+      .sort((a, b) => a.id.localeCompare(b.id)); // 呈現順序＝編號，不用排名順序，避免暗示名次
+    if(common.length === 0){ el.innerHTML = ""; return; }
+    const namesHtml = common.map(r => {
+      const role = (PEOPLE_DATA[r.id].self.role || "").trim();
+      return `<a href="?id=${r.id}" onclick="return navToPartner(event,'${r.id}')">${escapeHtml(r.name)}</a>`
+        + (role ? `（${escapeHtml(role)}）` : "");
+    }).join("、");
+    el.innerHTML = `<b>跨多類需求的共通服務窗口：</b>${namesHtml}——這幾位夥伴的服務橫跨多個客戶類型，各類型需求都可能找得到他們。`;
   }
 
   // ============================================================
@@ -3677,6 +3658,7 @@
   function renderAboutPage(){
     renderLinkageCards();
     renderCollabTable();
+    renderCollabCommonContacts();
     renderGapSections();
     renderProvenance();
   }
